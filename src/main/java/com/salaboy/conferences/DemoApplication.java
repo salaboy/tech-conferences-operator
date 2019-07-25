@@ -1,4 +1,4 @@
-package com.salaboy.conferences.techconferencesoperator;
+package com.salaboy.conferences;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,3 +11,5 @@ public class DemoApplication {
 	}
 
 }
+
+

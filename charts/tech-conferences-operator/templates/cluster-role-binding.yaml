@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: conferences-operator
+  namespace: jx-staging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: conferences-operator
+subjects:
+- kind: ServiceAccount
+  name: conferences-operator
+  namespace: jx-staging

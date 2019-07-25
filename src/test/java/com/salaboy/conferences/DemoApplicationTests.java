@@ -1,4 +1,4 @@
-package com.salaboy.conferences.techconferencesoperator;
+package com.salaboy.conferences;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
