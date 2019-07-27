@@ -104,7 +104,7 @@ public class ConferencesOperator {
             if (allCRDsFound()) {
                 logger.info("\t > Conference CRD: " + conferenceCRD.getMetadata().getName());
                 logger.info("\t > Tekton Pipeline CRD: " + pipelineCRD.getMetadata().getName());
-                \logger.info("\t > Tekton PipelineRun CRD: " + pipelineRunCRD.getMetadata().getName());
+                logger.info("\t > Tekton PipelineRun CRD: " + pipelineRunCRD.getMetadata().getName());
 //                logger.info("\t > MicroService CRD: " + microServiceCRD.getMetadata().getName());
 //                logger.info("\t > Registry CRD: " + registryCRD.getMetadata().getName());
 //                logger.info("\t > Gateway CRD: " + gatewayCRD.getMetadata().getName());
