@@ -133,11 +133,11 @@ public class ConferencesOperator {
      *  - It register the watches for our CRDs
      */
     private boolean init() {
-        logger.info("> JHipster K8s Operator is Starting!");
+        logger.info("> Conferences K8s Operator is Starting!");
         // Creating CRDs Clients
         conferenceCRDClient = k8SCoreRuntime.customResourcesClient(conferenceCRD, Conference.class, ConferenceList.class, DoneableConference.class).inNamespace(k8SCoreRuntime.getNamespace());
-        pipelineCRDClient = k8SCoreRuntime.customResourcesClient(pipelineCRD, Pipeline.class, PipelineList.class, DoneablePipeline.class).inNamespace(k8SCoreRuntime.getNamespace());
-        pipelineRunCRDClient = k8SCoreRuntime.customResourcesClient(pipelineRunCRD, PipelineRun.class, PipelineRunList.class, DoneablePipelineRun.class).inNamespace(k8SCoreRuntime.getNamespace());
+        pipelineCRDClient = k8SCoreRuntime.customResourcesClient(pipelineCRD, Pipeline.class, PipelineList.class, DoneablePipeline.class).inNamespace("jx");
+        pipelineRunCRDClient = k8SCoreRuntime.customResourcesClient(pipelineRunCRD, PipelineRun.class, PipelineRunList.class, DoneablePipelineRun.class).inNamespace("jx");
 //        microServicesCRDClient = k8SCoreRuntime.customResourcesClient(microServiceCRD, MicroService.class, MicroServiceList.class, DoneableMicroService.class).inNamespace(k8SCoreRuntime.getNamespace());
 //        gatewaysCRDClient = k8SCoreRuntime.customResourcesClient(gatewayCRD, Gateway.class, GatewayList.class, DoneableGateway.class).inNamespace(k8SCoreRuntime.getNamespace());
 //        registriesCRDClient = k8SCoreRuntime.customResourcesClient(registryCRD, Registry.class, RegistryList.class, DoneableRegistry.class).inNamespace(k8SCoreRuntime.getNamespace());
@@ -198,12 +198,14 @@ public class ConferencesOperator {
         }
 
         List<Pipeline> pipelineList = pipelineCRDClient.list().getItems();
-        for(Pipeline p : pipelineList){
+        logger.info(">>>> Looking for pipelines: ");
+        for (Pipeline p : pipelineList) {
             logger.info("> Pipeline: " + p);
         }
 
         List<PipelineRun> pipelineRunList = pipelineRunCRDClient.list().getItems();
-        for(PipelineRun pr : pipelineRunList){
+        logger.info(">>>> Looking for pipeline runs: ");
+        for (PipelineRun pr : pipelineRunList) {
             logger.info("> PipelineRun: " + pr);
         }
 
@@ -470,7 +472,7 @@ public class ConferencesOperator {
 
 
     /*
-     * Delete a JHipster Application by name
+     * Delete a Conference by name
      */
     public void deleteConference(String conferenceName) {
         Conference conference = conferenceService.getConference(conferenceName);
