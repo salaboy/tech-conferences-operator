@@ -1,4 +1,4 @@
-package com.salaboy.conferences.crds.tekton;
+package com.salaboy.conferences.crds.tekton.pipeline;
 
 import io.fabric8.kubernetes.api.builder.Function;
 import io.fabric8.kubernetes.client.CustomResourceDoneable;

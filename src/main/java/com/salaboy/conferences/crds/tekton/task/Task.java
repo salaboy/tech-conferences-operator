@@ -1,4 +1,4 @@
-package com.salaboy.conferences.crds.tekton;
+package com.salaboy.conferences.crds.tekton.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -9,14 +9,14 @@ import io.fabric8.kubernetes.client.CustomResource;
         using = JsonDeserializer.None.class
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Pipeline extends CustomResource {
-    private PipelineSpec spec;
+public class Task extends CustomResource {
+    private TaskSpec spec;
 
-    public PipelineSpec getSpec() {
+    public TaskSpec getSpec() {
         return spec;
     }
 
-    public void setSpec(PipelineSpec spec) {
+    public void setSpec(TaskSpec spec) {
         this.spec = spec;
     }
 

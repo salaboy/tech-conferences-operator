@@ -3,6 +3,10 @@ package com.salaboy.conferences;
 import com.salaboy.conferences.core.K8SCoreRuntime;
 import com.salaboy.conferences.crds.conference.Conference;
 import com.salaboy.conferences.crds.conference.CustomService;
+import com.salaboy.conferences.crds.tekton.pipeline.Pipeline;
+import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRun;
+import com.salaboy.conferences.crds.tekton.task.Task;
+import com.salaboy.conferences.crds.tekton.taskrun.TaskRun;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.OwnerReference;
 import org.slf4j.Logger;
@@ -146,6 +150,11 @@ public class ConferenceService {
 //        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "MicroService", MicroService.class);
 //        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "Gateway", Gateway.class);
 //        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "Registry", Registry.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.CONF_CRD_GROUP + "/v1", "Conference", Conference.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.CONF_CRD_GROUP_VERSION, "Conference", Conference.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Pipeline", Pipeline.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineRun", PipelineRun.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Task", Task.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "TaskRun", TaskRun.class);
+
     }
 }

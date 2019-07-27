@@ -5,6 +5,12 @@ import com.salaboy.conferences.crds.conference.Conference;
 import com.salaboy.conferences.crds.conference.ConferenceList;
 import com.salaboy.conferences.crds.conference.CustomService;
 import com.salaboy.conferences.crds.conference.DoneableConference;
+import com.salaboy.conferences.crds.tekton.pipeline.DoneablePipeline;
+import com.salaboy.conferences.crds.tekton.pipeline.Pipeline;
+import com.salaboy.conferences.crds.tekton.pipeline.PipelineList;
+import com.salaboy.conferences.crds.tekton.pipelinerun.DoneablePipelineRun;
+import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRun;
+import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRunList;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionList;
@@ -32,6 +38,8 @@ public class ConferencesOperator {
 //    private CustomResourceDefinition gatewayCRD = null;
 //    private CustomResourceDefinition registryCRD = null;
     private CustomResourceDefinition conferenceCRD = null;
+    private CustomResourceDefinition pipelineCRD = null;
+    private CustomResourceDefinition pipelineRunCRD = null;
     private boolean conferenceWatchRegistered = false;
     private String conferencesResourceVersion;
 //    private String microServicesResourceVersion;
@@ -39,6 +47,8 @@ public class ConferencesOperator {
 //    private String gatewaysResourceVersion;
 
     private NonNamespaceOperation<Conference, ConferenceList, DoneableConference, Resource<Conference, DoneableConference>> conferenceCRDClient;
+    private NonNamespaceOperation<Pipeline, PipelineList, DoneablePipeline, Resource<Pipeline, DoneablePipeline>> pipelineCRDClient;
+    private NonNamespaceOperation<PipelineRun, PipelineRunList, DoneablePipelineRun, Resource<PipelineRun, DoneablePipelineRun>> pipelineRunCRDClient;
 //    private NonNamespaceOperation<MicroService, MicroServiceList, DoneableMicroService, Resource<MicroService, DoneableMicroService>> microServicesCRDClient;
 //    private NonNamespaceOperation<Gateway, GatewayList, DoneableGateway, Resource<Gateway, DoneableGateway>> gatewaysCRDClient;
 //    private NonNamespaceOperation<Registry, RegistryList, DoneableRegistry, Resource<Registry, DoneableRegistry>> registriesCRDClient;
@@ -79,13 +89,22 @@ public class ConferencesOperator {
 //                    if (ConferenceCRDs.REGISTRY_CRD_NAME.equals(name)) {
 //                        registryCRD = crd;
 //                    }
+
                     if (ConferenceCRDs.CONF_CRD_NAME.equals(name)) {
                         conferenceCRD = crd;
+                    }
+                    if (ConferenceCRDs.TEKTON_PIPELINE_CRD_NAME.equals(name)) {
+                        pipelineCRD = crd;
+                    }
+                    if (ConferenceCRDs.TEKTON_PIPELINERUN_CRD_NAME.equals(name)) {
+                        pipelineRunCRD = crd;
                     }
                 }
             }
             if (allCRDsFound()) {
                 logger.info("\t > Conference CRD: " + conferenceCRD.getMetadata().getName());
+                logger.info("\t > Tekton Pipeline CRD: " + pipelineCRD.getMetadata().getName());
+                \logger.info("\t > Tekton PipelineRun CRD: " + pipelineRunCRD.getMetadata().getName());
 //                logger.info("\t > MicroService CRD: " + microServiceCRD.getMetadata().getName());
 //                logger.info("\t > Registry CRD: " + registryCRD.getMetadata().getName());
 //                logger.info("\t > Gateway CRD: " + gatewayCRD.getMetadata().getName());
@@ -93,6 +112,8 @@ public class ConferencesOperator {
             } else {
                 logger.error("> Custom CRDs required to work not found please check your installation!");
                 logger.error("\t > Conference CRD: " + ((conferenceCRD == null) ? " NOT FOUND " : conferenceCRD.getMetadata().getName()));
+                logger.error("\t > Tekton Pipeline CRD: " + ((pipelineCRD == null) ? " NOT FOUND " : pipelineCRD.getMetadata().getName()));
+                logger.error("\t > Tekton PipelineRun CRD: " + ((pipelineRunCRD == null) ? " NOT FOUND " : pipelineRunCRD.getMetadata().getName()));
 //                logger.error("\t > MicroService CRD: " + ((microServiceCRD == null) ? " NOT FOUND " : microServiceCRD.getMetadata().getName()));
 //                logger.error("\t > Registry CRD: " + ((registryCRD == null) ? " NOT FOUND " : registryCRD.getMetadata().getName()));
 //                logger.error("\t > Gateway CRD: " + ((gatewayCRD == null) ? " NOT FOUND " : gatewayCRD.getMetadata().getName()));
@@ -115,6 +136,8 @@ public class ConferencesOperator {
         logger.info("> JHipster K8s Operator is Starting!");
         // Creating CRDs Clients
         conferenceCRDClient = k8SCoreRuntime.customResourcesClient(conferenceCRD, Conference.class, ConferenceList.class, DoneableConference.class).inNamespace(k8SCoreRuntime.getNamespace());
+        pipelineCRDClient = k8SCoreRuntime.customResourcesClient(pipelineCRD, Pipeline.class, PipelineList.class, DoneablePipeline.class).inNamespace(k8SCoreRuntime.getNamespace());
+        pipelineRunCRDClient = k8SCoreRuntime.customResourcesClient(pipelineRunCRD, PipelineRun.class, PipelineRunList.class, DoneablePipelineRun.class).inNamespace(k8SCoreRuntime.getNamespace());
 //        microServicesCRDClient = k8SCoreRuntime.customResourcesClient(microServiceCRD, MicroService.class, MicroServiceList.class, DoneableMicroService.class).inNamespace(k8SCoreRuntime.getNamespace());
 //        gatewaysCRDClient = k8SCoreRuntime.customResourcesClient(gatewayCRD, Gateway.class, GatewayList.class, DoneableGateway.class).inNamespace(k8SCoreRuntime.getNamespace());
 //        registriesCRDClient = k8SCoreRuntime.customResourcesClient(registryCRD, Registry.class, RegistryList.class, DoneableRegistry.class).inNamespace(k8SCoreRuntime.getNamespace());
@@ -132,7 +155,7 @@ public class ConferencesOperator {
      */
     private boolean allCRDsFound() {
 //        if (microServiceCRD == null || conferenceCRD == null || gatewayCRD == null || registryCRD == null) {
-        if (conferenceCRD == null) {
+        if (conferenceCRD == null || pipelineCRD == null || pipelineRunCRD == null) {
             return false;
         }
         return true;
@@ -173,6 +196,18 @@ public class ConferencesOperator {
             });
 
         }
+
+        List<Pipeline> pipelineList = pipelineCRDClient.list().getItems();
+        for(Pipeline p : pipelineList){
+            logger.info("> Pipeline: " + p);
+        }
+
+        List<PipelineRun> pipelineRunList = pipelineRunCRDClient.list().getItems();
+        for(PipelineRun pr : pipelineRunList){
+            logger.info("> PipelineRun: " + pr);
+        }
+
+
 //        // Load Existing Service As
 //        List<MicroService> microServiceList = microServicesCRDClient.list().getItems();
 //        if (!microServiceList.isEmpty()) {
@@ -339,7 +374,7 @@ public class ConferencesOperator {
      */
     public void reconcile() {
         if (conferenceService.getConferences().isEmpty()) {
-            logger.info("> No Apps found.");
+            logger.info("> No Conferences found.");
         }
         // For each App Desired State
         conferenceService.getConferencesMap().keySet().forEach(appName ->
@@ -355,8 +390,8 @@ public class ConferencesOperator {
 //                        if (config.isK8sServiceCheckEnabled()) {
 //                            appHealthy = conferenceService.isConferenceHealthy(conference, true);
 //                        } else {
-                            // If we have K8s services disabled and the structure is ok we will set it as healthy
-                            appHealthy = true;
+                        // If we have K8s services disabled and the structure is ok we will set it as healthy
+                        appHealthy = true;
 //                        }
                         if (appHealthy) {
                             // YES: Change the state and provide a URL
