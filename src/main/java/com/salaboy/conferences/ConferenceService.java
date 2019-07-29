@@ -147,9 +147,6 @@ public class ConferenceService {
     }
 
     public void registerCustomResourcesForRuntime() {
-//        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "MicroService", MicroService.class);
-//        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "Gateway", Gateway.class);
-//        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.APP_CRD_GROUP + "/v1", "Registry", Registry.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.CONF_CRD_GROUP_VERSION, "Conference", Conference.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Pipeline", Pipeline.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineRun", PipelineRun.class);

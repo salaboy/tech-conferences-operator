@@ -11,6 +11,12 @@ import com.salaboy.conferences.crds.tekton.pipeline.PipelineList;
 import com.salaboy.conferences.crds.tekton.pipelinerun.DoneablePipelineRun;
 import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRun;
 import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRunList;
+import com.salaboy.conferences.crds.tekton.task.DoneableTask;
+import com.salaboy.conferences.crds.tekton.task.Task;
+import com.salaboy.conferences.crds.tekton.task.TaskList;
+import com.salaboy.conferences.crds.tekton.taskrun.DoneableTaskRun;
+import com.salaboy.conferences.crds.tekton.taskrun.TaskRun;
+import com.salaboy.conferences.crds.tekton.taskrun.TaskRunList;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionList;
@@ -34,24 +40,25 @@ public class ConferencesOperator {
     private boolean crdsFound = false;
 
     private Logger logger = LoggerFactory.getLogger(ConferencesOperator.class);
-    //    private CustomResourceDefinition microServiceCRD = null;
-//    private CustomResourceDefinition gatewayCRD = null;
-//    private CustomResourceDefinition registryCRD = null;
     private CustomResourceDefinition conferenceCRD = null;
     private CustomResourceDefinition pipelineCRD = null;
     private CustomResourceDefinition pipelineRunCRD = null;
+    private CustomResourceDefinition taskCRD = null;
+    private CustomResourceDefinition taskRunCRD = null;
+
     private boolean conferenceWatchRegistered = false;
+    private boolean pipelineWatchRegistered = false;
+    private boolean pipelineRunWatchRegistered = false;
     private String conferencesResourceVersion;
-//    private String microServicesResourceVersion;
-//    private String registriesResourceVersion;
-//    private String gatewaysResourceVersion;
+    private String pipelinesResourceVersion;
+    private String pipelineRunsResourceVersion;
+
 
     private NonNamespaceOperation<Conference, ConferenceList, DoneableConference, Resource<Conference, DoneableConference>> conferenceCRDClient;
     private NonNamespaceOperation<Pipeline, PipelineList, DoneablePipeline, Resource<Pipeline, DoneablePipeline>> pipelineCRDClient;
     private NonNamespaceOperation<PipelineRun, PipelineRunList, DoneablePipelineRun, Resource<PipelineRun, DoneablePipelineRun>> pipelineRunCRDClient;
-//    private NonNamespaceOperation<MicroService, MicroServiceList, DoneableMicroService, Resource<MicroService, DoneableMicroService>> microServicesCRDClient;
-//    private NonNamespaceOperation<Gateway, GatewayList, DoneableGateway, Resource<Gateway, DoneableGateway>> gatewaysCRDClient;
-//    private NonNamespaceOperation<Registry, RegistryList, DoneableRegistry, Resource<Registry, DoneableRegistry>> registriesCRDClient;
+    private NonNamespaceOperation<Task, TaskList, DoneableTask, Resource<Task, DoneableTask>> taskCRDClient;
+    private NonNamespaceOperation<TaskRun, TaskRunList, DoneableTaskRun, Resource<TaskRun, DoneableTaskRun>> taskRunCRDClient;
 
 
     @Autowired
@@ -80,15 +87,7 @@ public class ConferencesOperator {
                 ObjectMeta metadata = crd.getMetadata();
                 if (metadata != null) {
                     String name = metadata.getName();
-//                    if (ConferenceCRDs.MICROSERVICE_CRD_NAME.equals(name)) {
-//                        microServiceCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.GATEWAY_CRD_NAME.equals(name)) {
-//                        gatewayCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.REGISTRY_CRD_NAME.equals(name)) {
-//                        registryCRD = crd;
-//                    }
+
 
                     if (ConferenceCRDs.CONF_CRD_NAME.equals(name)) {
                         conferenceCRD = crd;
@@ -99,24 +98,30 @@ public class ConferencesOperator {
                     if (ConferenceCRDs.TEKTON_PIPELINERUN_CRD_NAME.equals(name)) {
                         pipelineRunCRD = crd;
                     }
+                    if (ConferenceCRDs.TEKTON_TASK_CRD_NAME.equals(name)) {
+                        taskCRD = crd;
+                    }
+                    if (ConferenceCRDs.TEKTON_TASKRUN_CRD_NAME.equals(name)) {
+                        taskRunCRD = crd;
+                    }
                 }
             }
             if (allCRDsFound()) {
                 logger.info("\t > Conference CRD: " + conferenceCRD.getMetadata().getName());
                 logger.info("\t > Tekton Pipeline CRD: " + pipelineCRD.getMetadata().getName());
                 logger.info("\t > Tekton PipelineRun CRD: " + pipelineRunCRD.getMetadata().getName());
-//                logger.info("\t > MicroService CRD: " + microServiceCRD.getMetadata().getName());
-//                logger.info("\t > Registry CRD: " + registryCRD.getMetadata().getName());
-//                logger.info("\t > Gateway CRD: " + gatewayCRD.getMetadata().getName());
+                logger.info("\t > Tekton Task CRD: " + taskCRD.getMetadata().getName());
+                logger.info("\t > Tekton TaskRun CRD: " + taskRunCRD.getMetadata().getName());
+
                 return true;
             } else {
                 logger.error("> Custom CRDs required to work not found please check your installation!");
                 logger.error("\t > Conference CRD: " + ((conferenceCRD == null) ? " NOT FOUND " : conferenceCRD.getMetadata().getName()));
                 logger.error("\t > Tekton Pipeline CRD: " + ((pipelineCRD == null) ? " NOT FOUND " : pipelineCRD.getMetadata().getName()));
                 logger.error("\t > Tekton PipelineRun CRD: " + ((pipelineRunCRD == null) ? " NOT FOUND " : pipelineRunCRD.getMetadata().getName()));
-//                logger.error("\t > MicroService CRD: " + ((microServiceCRD == null) ? " NOT FOUND " : microServiceCRD.getMetadata().getName()));
-//                logger.error("\t > Registry CRD: " + ((registryCRD == null) ? " NOT FOUND " : registryCRD.getMetadata().getName()));
-//                logger.error("\t > Gateway CRD: " + ((gatewayCRD == null) ? " NOT FOUND " : gatewayCRD.getMetadata().getName()));
+                logger.error("\t > Tekton Task CRD: " + ((taskCRD == null) ? " NOT FOUND " : taskCRD.getMetadata().getName()));
+                logger.error("\t > Tekton TaskRun CRD: " + ((taskRunCRD == null) ? " NOT FOUND " : taskRunCRD.getMetadata().getName()));
+
                 return false;
             }
         } catch (Exception e) {
@@ -138,9 +143,8 @@ public class ConferencesOperator {
         conferenceCRDClient = k8SCoreRuntime.customResourcesClient(conferenceCRD, Conference.class, ConferenceList.class, DoneableConference.class).inNamespace(k8SCoreRuntime.getNamespace());
         pipelineCRDClient = k8SCoreRuntime.customResourcesClient(pipelineCRD, Pipeline.class, PipelineList.class, DoneablePipeline.class).inNamespace("jx");
         pipelineRunCRDClient = k8SCoreRuntime.customResourcesClient(pipelineRunCRD, PipelineRun.class, PipelineRunList.class, DoneablePipelineRun.class).inNamespace("jx");
-//        microServicesCRDClient = k8SCoreRuntime.customResourcesClient(microServiceCRD, MicroService.class, MicroServiceList.class, DoneableMicroService.class).inNamespace(k8SCoreRuntime.getNamespace());
-//        gatewaysCRDClient = k8SCoreRuntime.customResourcesClient(gatewayCRD, Gateway.class, GatewayList.class, DoneableGateway.class).inNamespace(k8SCoreRuntime.getNamespace());
-//        registriesCRDClient = k8SCoreRuntime.customResourcesClient(registryCRD, Registry.class, RegistryList.class, DoneableRegistry.class).inNamespace(k8SCoreRuntime.getNamespace());
+        taskCRDClient = k8SCoreRuntime.customResourcesClient(taskCRD, Task.class, TaskList.class, DoneableTask.class).inNamespace("jx");
+        taskRunCRDClient = k8SCoreRuntime.customResourcesClient(taskRunCRD, TaskRun.class, TaskRunList.class, DoneableTaskRun.class).inNamespace("jx");
 
         if (loadExistingResources() && watchOurCRDs()) {
             return true;
@@ -154,8 +158,8 @@ public class ConferencesOperator {
      * Check that all the CRDs are found for this operator to work
      */
     private boolean allCRDsFound() {
-//        if (microServiceCRD == null || conferenceCRD == null || gatewayCRD == null || registryCRD == null) {
-        if (conferenceCRD == null || pipelineCRD == null || pipelineRunCRD == null) {
+        if (conferenceCRD == null || pipelineCRD == null
+                || pipelineRunCRD == null || taskCRD == null || taskRunCRD == null) {
             return false;
         }
         return true;
@@ -170,7 +174,13 @@ public class ConferencesOperator {
         if (!conferenceWatchRegistered) {
             registerConferenceWatch();
         }
-        if (conferenceWatchRegistered) {
+        if (!pipelineWatchRegistered) {
+            registerPipelineWatch();
+        }
+        if (!pipelineRunWatchRegistered) {
+            registerPipelineRunWatch();
+        }
+        if (conferenceWatchRegistered && pipelineWatchRegistered && pipelineRunWatchRegistered) {
             logger.info("> All CRDs Found, init complete");
             return true;
         } else {
@@ -198,16 +208,37 @@ public class ConferencesOperator {
         }
 
         List<Pipeline> pipelineList = pipelineCRDClient.list().getItems();
-        logger.info(">>>> Looking for pipelines: ");
-        for (Pipeline p : pipelineList) {
-            logger.info("> Pipeline: " + p);
+        if (!pipelineList.isEmpty()) {
+            pipelinesResourceVersion = pipelineList.get(0).getMetadata().getResourceVersion();
+            logger.info(">> Pipeline Resource Version: " + pipelinesResourceVersion);
+            logger.info(">>>> Looking for pipelines: ");
+            for (Pipeline p : pipelineList) {
+                logger.info("> Pipeline: " + p);
+            }
         }
 
+
         List<PipelineRun> pipelineRunList = pipelineRunCRDClient.list().getItems();
-        logger.info(">>>> Looking for pipeline runs: ");
-        for (PipelineRun pr : pipelineRunList) {
-            logger.info("> PipelineRun: " + pr);
+        if (!pipelineRunList.isEmpty()) {
+            pipelineRunsResourceVersion = pipelineRunList.get(0).getMetadata().getResourceVersion();
+            logger.info(">> PipelineRun Resource Version: " + pipelineRunsResourceVersion);
+            logger.info(">>>> Looking for pipeline runs: ");
+            for (PipelineRun pr : pipelineRunList) {
+                logger.info("> PipelineRun: " + pr);
+            }
         }
+
+//        List<Task> taskList = taskCRDClient.list().getItems();
+//        logger.info(">>>> Looking for tasks: ");
+//        for (Task t : taskList) {
+//            logger.info("> Task: " + t);
+//        }
+//
+//        List<TaskRun> taskRunList = taskRunCRDClient.list().getItems();
+//        logger.info(">>>> Looking for task runs: ");
+//        for (TaskRun tr : taskRunList) {
+//            logger.info("> TaskRun: " + tr);
+//        }
 
 
 //        // Load Existing Service As
@@ -263,11 +294,74 @@ public class ConferencesOperator {
 
 
     /*
-     * Register an Application Resource Watch
-     *  - This watch is in charge of adding and removing apps to/from the In memory desired state
+     * Register an Pipeline Resource Watch
+     *  - This watch is in charge of adding and removing pipelines to/from the In memory desired state
+     */
+    private void registerPipelineWatch() {
+        logger.info("> Registering Pipeline CRD Watch");
+        pipelineCRDClient.withResourceVersion(pipelinesResourceVersion).watch(new Watcher<Pipeline>() {
+            @Override
+            public void eventReceived(Watcher.Action action, Pipeline pipeline) {
+                if (action.equals(Action.ADDED)) {
+                    logger.info(">> Pipeline Added: " + pipeline.getMetadata().getName());
+
+                }
+                if (action.equals(Action.DELETED)) {
+                    logger.info(">> Deleting Pipeline: " + pipeline.getMetadata().getName());
+
+                }
+                if (action.equals(Action.MODIFIED)) {
+                    logger.info(">> Modifying Pipeline: " + pipeline.getMetadata().getName());
+                }
+
+            }
+
+            @Override
+            public void onClose(KubernetesClientException cause) {
+            }
+        });
+        pipelineWatchRegistered = true;
+
+    }
+
+    /*
+     * Register an PipelineRun Resource Watch
+     *  - This watch is in charge of adding and removing pipelineRuns to/from the In memory desired state
+     */
+    private void registerPipelineRunWatch() {
+        logger.info("> Registering Pipeline Run CRD Watch");
+        pipelineRunCRDClient.withResourceVersion(pipelineRunsResourceVersion).watch(new Watcher<PipelineRun>() {
+            @Override
+            public void eventReceived(Watcher.Action action, PipelineRun pipelineRun) {
+                if (action.equals(Action.ADDED)) {
+                    logger.info(">> PipelineRun Added: " + pipelineRun.getMetadata().getName());
+
+                }
+                if (action.equals(Action.DELETED)) {
+                    logger.info(">> Deleting PipelineRun: " + pipelineRun.getMetadata().getName());
+
+                }
+                if (action.equals(Action.MODIFIED)) {
+                    logger.info(">> Modifying PipelineRun: " + pipelineRun.getMetadata().getName());
+                }
+
+            }
+
+            @Override
+            public void onClose(KubernetesClientException cause) {
+            }
+        });
+        pipelineRunWatchRegistered = true;
+
+    }
+
+
+    /*
+     * Register an Conference Resource Watch
+     *  - This watch is in charge of adding and removing conferences to/from the In memory desired state
      */
     private void registerConferenceWatch() {
-        logger.info("> Registering Application CRD Watch");
+        logger.info("> Registering Conference CRD Watch");
         conferenceCRDClient.withResourceVersion(conferencesResourceVersion).watch(new Watcher<Conference>() {
             @Override
             public void eventReceived(Watcher.Action action, Conference conference) {
@@ -283,14 +377,11 @@ public class ConferencesOperator {
                     conferenceService.removeConference(conference.getMetadata().getName());
                 }
                 if (action.equals(Action.MODIFIED)) {
-                    logger.info(">> Modifying App: " + conference.getMetadata().getName());
+                    logger.info(">> Modifying Conf: " + conference.getMetadata().getName());
                     conferenceService.addConference(conference.getMetadata().getName(), conference);
 //                    linkAllApplicationResources(conference);
                 }
 
-                if (conference.getSpec() == null) {
-                    logger.info("No Spec for resource " + conference.getMetadata().getName());
-                }
             }
 
             @Override

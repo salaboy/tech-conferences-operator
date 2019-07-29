@@ -1,0 +1,189 @@
+{
+  "apiVersion": "tekton.dev/v1alpha1",
+  "kind": "TaskRun",
+  "metadata": {
+    "creationTimestamp": "2019-07-27T09:13:15Z",
+    "generation": 1,
+    "labels": {
+      "branch": "master",
+      "build": "7",
+      "context": "release",
+      "created-by-prow": "true",
+      "jenkins.io/task-stage-name": "from-build-pack",
+      "owner": "salaboy",
+      "prowJobName": "bd7ea502-b04e-11e9-bf25-622a3e26e6c0",
+      "repo": "tech-conferences-operator",
+      "tekton.dev/pipeline": "salaboy-tech-conferences-operat-ljgml-7",
+      "tekton.dev/pipelineRun": "salaboy-tech-conferences-operat-ljgml-7",
+      "tekton.dev/task": "salaboy-tech-conferences-operat-ljgml-from-build-pack-7"
+    },
+    "name": "salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8",
+    "namespace": "jx",
+    "ownerReferences": [
+      {
+        "apiVersion": "tekton.dev/v1alpha1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "PipelineRun",
+        "name": "salaboy-tech-conferences-operat-ljgml-7",
+        "uid": "c3c86ff9-b04e-11e9-b4af-42010aa400c9"
+      }
+    ],
+    "resourceVersion": "3397087",
+    "selfLink": "/apis/tekton.dev/v1alpha1/namespaces/jx/taskruns/salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8",
+    "uid": "c43aabad-b04e-11e9-b4af-42010aa400c9"
+  },
+  "spec": {
+    "inputs": {
+      "params": [
+        {
+          "name": "version",
+          "value": "0.0.7"
+        },
+        {
+          "name": "build_id",
+          "value": "7"
+        }
+      ],
+      "resources": [
+        {
+          "name": "workspace",
+          "resourceRef": {
+            "name": "salaboy-tech-conferences-operat-ljgml"
+          }
+        }
+      ]
+    },
+    "outputs": {},
+    "serviceAccount": "tekton-bot",
+    "taskRef": {
+      "kind": "Task",
+      "name": "salaboy-tech-conferences-operat-ljgml-from-build-pack-7"
+    },
+    "timeout": "240h0m0s"
+  },
+  "status": {
+    "completionTime": "2019-07-27T09:15:20Z",
+    "conditions": [
+      {
+        "lastTransitionTime": "2019-07-27T09:15:20Z",
+        "status": "True",
+        "type": "Succeeded"
+      }
+    ],
+    "podName": "salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8-pod-08434a",
+    "startTime": "2019-07-27T09:13:15Z",
+    "steps": [
+      {
+        "name": "build-container-build",
+        "terminated": {
+          "containerID": "docker://ff26b7f00278086395846ef9805d82622fad1a97f651fc54154f7b727944b94d",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:17Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:23Z"
+        }
+      },
+      {
+        "name": "build-mvn-deploy",
+        "terminated": {
+          "containerID": "docker://f154f2c2187d9d57559775b98f573918d2bfbcc94f1a543d1025b5e106108e7d",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:04Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:22Z"
+        }
+      },
+      {
+        "name": "build-post-build",
+        "terminated": {
+          "containerID": "docker://e97821b86562a97ea8ee430439aa1870d56543fd5b94a12cca712fb890b1c12c",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:17Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:23Z"
+        }
+      },
+      {
+        "name": "build-skaffold-version",
+        "terminated": {
+          "containerID": "docker://040b434b0e26cc4f385e0dee7f09fe09bc9c6b7085730f334dffb8cb9271125d",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:05Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:22Z"
+        }
+      },
+      {
+        "name": "git-merge",
+        "terminated": {
+          "containerID": "docker://802a33898fbce57151b518e51ca997018c34f93d538b5957ace8ecbb5565181f",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:13:23Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:22Z"
+        }
+      },
+      {
+        "name": "git-source-salaboy-tech-conferences-operat-ljgml-g6m",
+        "terminated": {
+          "containerID": "docker://5b8f246908321d786506865e126e152d109dde36cbda872d0ca4a4da25183d12",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:13:22Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:20Z"
+        }
+      },
+      {
+        "name": "promote-changelog",
+        "terminated": {
+          "containerID": "docker://6ad760972812b64a41ed3b5fa05edf0d753dce05c5597e65490006a07656117b",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:22Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:23Z"
+        }
+      },
+      {
+        "name": "promote-helm-release",
+        "terminated": {
+          "containerID": "docker://7bca9a82786d4112188a18126c74536524b110e63f404a4837dba575f575f669",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:14:26Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:23Z"
+        }
+      },
+      {
+        "name": "promote-jx-promote",
+        "terminated": {
+          "containerID": "docker://3fe9cb78bc2e7179279cb6361613a25f9e7e521b798035544a48a1f1d7f41e42",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:15:18Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:23Z"
+        }
+      },
+      {
+        "name": "setup-jx-git-credentials",
+        "terminated": {
+          "containerID": "docker://69ef4ee985685f3821d63527818cb823b729aabbfaf10e17459ab35d4db2e436",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:13:24Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:22Z"
+        }
+      },
+      {
+        "name": "nop",
+        "terminated": {
+          "containerID": "docker://2b9c51f9b8fa687658c66f626fff855b95c8a4175f28093b966a0cd637e00c6e",
+          "exitCode": 0,
+          "finishedAt": "2019-07-27T09:15:18Z",
+          "reason": "Completed",
+          "startedAt": "2019-07-27T09:13:24Z"
+        }
+      }
+    ]
+  }
+}

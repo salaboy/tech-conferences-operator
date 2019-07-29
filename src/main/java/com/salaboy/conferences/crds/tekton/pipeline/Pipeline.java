@@ -27,6 +27,7 @@ public class Pipeline extends CustomResource {
     @Override
     public String toString() {
         return "Pipeline{" +
+                "name=" + getMetadata().getName() + "," +
                 "spec=" + spec +
                 '}';
     }

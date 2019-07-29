@@ -3,39 +3,62 @@ package com.salaboy.conferences.crds.tekton.task;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.salaboy.conferences.crds.tekton.Parameter;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
+import org.apache.naming.ResourceRef;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskSpec implements KubernetesResource {
-    private Map<String, String> params;
-    private Map<String, String> resources;
+    private List<Parameter> params;
+    private List<ResourceRef> resources;
+    private List<Step> steps;
 
-    public Map<String, String> getParams() {
+    public TaskSpec() {
+    }
+
+    public TaskSpec(List<Parameter> params, List<ResourceRef> resources, List<Step> steps) {
+        this.params = params;
+        this.resources = resources;
+        this.steps = steps;
+    }
+
+    public List<Parameter> getParams() {
         return params;
     }
 
-    public void setParams(Map<String, String> params) {
+    public void setParams(List<Parameter> params) {
         this.params = params;
     }
 
-    public Map<String, String> getResources() {
+    public List<ResourceRef> getResources() {
         return resources;
     }
 
-    public void setResources(Map<String, String> resources) {
+    public void setResources(List<ResourceRef> resources) {
         this.resources = resources;
+    }
+
+
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 
     @Override
     public String toString() {
         return "TaskSpec{" +
-                "params=" + params +
-                ", resources=" + resources +
+                "params=" + ((params != null) ? Arrays.toString(params.toArray()) : params) +
+                ", resources=" + ((resources != null) ? Arrays.toString(resources.toArray()) : resources) +
+                ", steps=" + ((steps != null) ? Arrays.toString(steps.toArray()) : steps) +
                 '}';
     }
 }

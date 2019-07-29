@@ -1,25 +1,20 @@
-package com.salaboy.conferences.crds.tekton.pipeline;
+package com.salaboy.conferences.crds.tekton.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.salaboy.conferences.crds.tekton.Parameter;
 import com.salaboy.conferences.crds.tekton.Resource;
-import com.salaboy.conferences.crds.tekton.task.TaskSpec;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @JsonDeserialize(
         using = JsonDeserializer.None.class
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PipelineSpec implements KubernetesResource {
+public class TaskInputsRef {
     private List<Parameter> params;
     private List<Resource> resources;
-    private List<TaskRef> tasks;
 
     public List<Parameter> getParams() {
         return params;
@@ -37,20 +32,11 @@ public class PipelineSpec implements KubernetesResource {
         this.resources = resources;
     }
 
-    public List<TaskRef> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<TaskRef> tasks) {
-        this.tasks = tasks;
-    }
-
     @Override
     public String toString() {
-        return "PipelineSpec{" +
-                "params=" + Arrays.toString(params.toArray()) +
-                ", resources=" + Arrays.toString(resources.toArray()) +
-                ", tasks=" + Arrays.toString(tasks.toArray()) +
+        return "TaskInputsRef{" +
+                "params=" + params +
+                ", resources=" + resources +
                 '}';
     }
 }

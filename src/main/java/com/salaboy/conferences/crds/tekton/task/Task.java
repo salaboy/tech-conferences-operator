@@ -26,7 +26,7 @@ public class Task extends CustomResource {
 
     @Override
     public String toString() {
-        return "Pipeline{" +
+        return "Task{" +
                 "spec=" + spec +
                 '}';
     }
