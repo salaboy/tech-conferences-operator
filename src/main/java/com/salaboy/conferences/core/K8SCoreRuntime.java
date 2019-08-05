@@ -94,7 +94,7 @@ public class K8SCoreRuntime {
                     .build();
             Ingress ingress = new IngressBuilder().
                     withNewMetadata()
-                    .withName(serviceName)
+                    .withName(confName)
 //                    //@TODO:  CREATE OWNER reFERENCE FOR INGRESS AND THE CONFERENCE AS PARENT
 //                    .withOwnerReferences(new OwnerReferenceBuilder().withUid().build())
                     .endMetadata()
@@ -103,12 +103,12 @@ public class K8SCoreRuntime {
                     .endSpec()
                     .build();
             kubernetesClient.extensions().ingresses().createOrReplace(ingress);
-            logger.info("> Ingress: " + serviceName + " created! ");
+            logger.info("> Ingress: " + confName + " created! ");
         } else {
-            Ingress ingress = kubernetesClient.extensions().ingresses().withName(serviceName).get();
+            Ingress ingress = kubernetesClient.extensions().ingresses().withName(confName).get();
             if (ingress != null) {
                 kubernetesClient.extensions().ingresses().delete(ingress);
-                logger.info("> Ingress: " + serviceName + " deleted! ");
+                logger.info("> Ingress: " + confName + " deleted! ");
             }
         }
 
