@@ -17,12 +17,12 @@ import java.util.List;
 public class TaskSpec implements KubernetesResource {
     private List<Parameter> params;
     private List<ResourceRef> resources;
-    private List<Step> steps;
+    private List<TaskStep> steps;
 
     public TaskSpec() {
     }
 
-    public TaskSpec(List<Parameter> params, List<ResourceRef> resources, List<Step> steps) {
+    public TaskSpec(List<Parameter> params, List<ResourceRef> resources, List<TaskStep> steps) {
         this.params = params;
         this.resources = resources;
         this.steps = steps;
@@ -45,11 +45,11 @@ public class TaskSpec implements KubernetesResource {
     }
 
 
-    public List<Step> getSteps() {
+    public List<TaskStep> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<Step> steps) {
+    public void setSteps(List<TaskStep> steps) {
         this.steps = steps;
     }
 

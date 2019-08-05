@@ -3,10 +3,14 @@ package com.salaboy.conferences;
 import com.salaboy.conferences.core.K8SCoreRuntime;
 import com.salaboy.conferences.crds.conference.Conference;
 import com.salaboy.conferences.crds.conference.CustomService;
+import com.salaboy.conferences.crds.conference.ModuleRef;
+import com.salaboy.conferences.crds.jenkinsx.pipelineactivity.PipelineActivity;
 import com.salaboy.conferences.crds.tekton.pipeline.Pipeline;
+import com.salaboy.conferences.crds.tekton.pipelineresource.PipelineResource;
 import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRun;
 import com.salaboy.conferences.crds.tekton.task.Task;
 import com.salaboy.conferences.crds.tekton.taskrun.TaskRun;
+import com.salaboy.conferences.utils.ComparableVersion;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.OwnerReference;
 import org.slf4j.Logger;
@@ -23,7 +27,8 @@ import java.util.stream.Collectors;
 public class ConferenceService {
     private Logger logger = LoggerFactory.getLogger(ConferenceService.class);
     private Map<String, Conference> conferences = new ConcurrentHashMap<>();
-    private Map<String, String> appsUrls = new HashMap<>();
+    private Map<String, Map<String, List<PipelineActivity>>> conferencePipelines = new ConcurrentHashMap<>();
+    private Map<String, String> conferencesUrls = new HashMap<>();
 
     @Autowired
     private K8SCoreRuntime k8SCoreRuntime;
@@ -128,30 +133,91 @@ public class ConferenceService {
     }
 
     public String getConferenceUrl(String conferenceName) {
-        return appsUrls.get(conferenceName);
+        return conferencesUrls.get(conferenceName);
     }
 
-    public String createAndSetConferenceURL(String appName, String appVersion) {
-        String externalIp = k8SCoreRuntime.findExternalIP();
-        String url = "http://" + externalIp + "/apps/" + appName + "/" + appVersion + "/";
-        appsUrls.put(appName, url);
-        return url;
+    public String exposeAndSetConferenceURL(Conference conference, boolean exposed) {
+        List<ModuleRef> modules = conference.getSpec().getModules();
+        String siteName = "";
+        for (ModuleRef mr : modules) {
+            if (mr.getName().endsWith("-site")) {
+                siteName = mr.getName();
+            }
+        }
+        String externalIp = k8SCoreRuntime.exposeConferenceSite(conference.getMetadata().getName(), siteName, exposed);
+        if (exposed) {
+            conferencesUrls.put(conference.getMetadata().getName(), externalIp);
+        } else {
+            conferencesUrls.remove(conference.getMetadata().getName());
+        }
+        return externalIp;
     }
 
     public Map<String, Conference> getConferencesMap() {
         return conferences;
     }
 
-    public Map<String, String> getAppsUrls() {
-        return appsUrls;
+    public Map<String, String> getConferencesUrls() {
+        return conferencesUrls;
     }
 
     public void registerCustomResourcesForRuntime() {
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.CONF_CRD_GROUP_VERSION, "Conference", Conference.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Pipeline", Pipeline.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineResource", PipelineResource.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineRun", PipelineRun.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Task", Task.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "TaskRun", TaskRun.class);
+        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.JENKINSX_CRD_GROUP_VERSION, "PipelineActivity", PipelineActivity.class);
 
+    }
+
+    public void addPipelineToConf(String confName, String module, PipelineActivity pa) {
+        if (pa.getSpec().getVersion() == null) {
+            return;
+        }
+        Map<String, List<PipelineActivity>> conferenceModules = conferencePipelines.get(confName);
+        if (conferenceModules == null) {
+            conferencePipelines.put(confName, new ConcurrentHashMap<>());
+        }
+        List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
+        if (pipelineActivities == null) {
+            conferencePipelines.get(confName).put(module, new ArrayList<>());
+        }
+        //Before adding check if there is a pipelineActivity for that version, if so update
+        boolean update = false;
+        PipelineActivity pipelineActivityToUpdate = null;
+
+        for (PipelineActivity pipelineActivity : conferencePipelines.get(confName).get(module)) {
+            if (pipelineActivity.getSpec().getVersion().equals(pa.getSpec().getVersion())) {
+                update = true;
+                pipelineActivityToUpdate = pipelineActivity;
+            }
+        }
+        if (update) {
+            conferencePipelines.get(confName).get(module).remove(pipelineActivityToUpdate);
+        }
+        conferencePipelines.get(confName).get(module).add(pa);
+    }
+
+    public Map<String, Map<String, List<PipelineActivity>>> getConferencePipelines() {
+        return conferencePipelines;
+    }
+
+    public Map<String, List<PipelineActivity>> getConferencePipeline(String confName) {
+        return conferencePipelines.get(confName);
+    }
+
+
+    public String getPipelineActivityLastStatusForModule(String confName, String module) {
+        List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
+        pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+        return pipelineActivities.get(0).getSpec().getStatus();
+    }
+
+    public String getPipelineActivityLastVersionForModule(String confName, String module) {
+        List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
+        pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+        return pipelineActivities.get(0).getSpec().getVersion();
     }
 }

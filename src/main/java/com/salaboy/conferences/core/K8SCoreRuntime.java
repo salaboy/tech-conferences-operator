@@ -3,6 +3,10 @@ package com.salaboy.conferences.core;
 import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionList;
+import io.fabric8.kubernetes.api.model.extensions.Ingress;
+import io.fabric8.kubernetes.api.model.extensions.IngressBuilder;
+import io.fabric8.kubernetes.api.model.extensions.IngressRule;
+import io.fabric8.kubernetes.api.model.extensions.IngressRuleBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.MixedOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class K8SCoreRuntime {
@@ -62,6 +67,7 @@ public class K8SCoreRuntime {
     }
 
     public String findExternalIP() {
+
         if (externalIP.equals("N/A")) {
             externalIP = tryIstioGatewayApproach();
         }
@@ -69,6 +75,64 @@ public class K8SCoreRuntime {
             externalIP = tryLoadBalancerApproach();
         }
         return externalIP;
+    }
+
+    public String exposeConferenceSite(String confName, String serviceName, boolean exposed) {
+        String ip = tryToResolveIngressControllerIP();
+        String host = confName + ".jx-staging." + ip + ".nip.io";
+        if (exposed) {
+            IngressRule backend = new IngressRuleBuilder()
+                    .withHost(host)
+                    .withNewHttp()
+                    .addNewPath()
+                    .withNewBackend()
+                    .withServiceName(serviceName)
+                    .withNewServicePort().withIntVal(80).endServicePort()
+                    .endBackend()
+                    .endPath()
+                    .endHttp()
+                    .build();
+            Ingress ingress = new IngressBuilder().
+                    withNewMetadata()
+                    .withName(serviceName)
+//                    //@TODO:  CREATE OWNER reFERENCE FOR INGRESS AND THE CONFERENCE AS PARENT
+//                    .withOwnerReferences(new OwnerReferenceBuilder().withUid().build())
+                    .endMetadata()
+                    .withNewSpec()
+                    .withRules(backend)
+                    .endSpec()
+                    .build();
+            kubernetesClient.extensions().ingresses().createOrReplace(ingress);
+            logger.info("> Ingress: " + serviceName + " created! ");
+        } else {
+            Ingress ingress = kubernetesClient.extensions().ingresses().withName(serviceName).get();
+            if (ingress != null) {
+                kubernetesClient.extensions().ingresses().delete(ingress);
+                logger.info("> Ingress: " + serviceName + " deleted! ");
+            }
+        }
+
+
+        return host;
+
+
+    }
+
+    private String tryToResolveIngressControllerIP() {
+        String ip = "N/A";
+        io.fabric8.kubernetes.api.model.Service service = kubernetesClient.services().inNamespace("kube-system").withName("jxing-nginx-ingress-controller").get();
+        if (service != null) {
+            if (service.getSpec().getType().equals("LoadBalancer")) {
+                if (!service.getStatus().getLoadBalancer().getIngress().isEmpty()) {
+                    ip = service.getStatus().getLoadBalancer().getIngress().get(0).getIp();
+                    logger.info("> IP resolved from Ingress Controller: " + ip);
+
+                }
+            }
+        } else {
+            logger.error("> Service: jxing-nginx-ingress-controller not found!");
+        }
+        return ip;
     }
 
     private String tryLoadBalancerApproach() {

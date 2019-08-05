@@ -1,5 +1,0 @@
-apiVersion: "conferences.alpha.k8s.salaboy.com/v1"
-kind: Conference
-metadata:
-  name: jenkins-world
-spec:

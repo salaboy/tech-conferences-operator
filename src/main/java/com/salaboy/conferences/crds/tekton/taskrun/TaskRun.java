@@ -12,7 +12,7 @@ import io.fabric8.kubernetes.client.CustomResource;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TaskRun extends CustomResource {
     private TaskRunSpec spec;
-    private Status status;
+    private TaskRunStatus status;
 
     public TaskRunSpec getSpec() {
         return spec;
@@ -22,11 +22,11 @@ public class TaskRun extends CustomResource {
         this.spec = spec;
     }
 
-    public Status getStatus() {
+    public TaskRunStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskRunStatus status) {
         this.status = status;
     }
 

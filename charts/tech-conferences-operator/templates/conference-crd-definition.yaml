@@ -13,11 +13,19 @@ spec:
     shortNames:
     - conf
   additionalPrinterColumns:
+    - name: LOCATION
+      type: string
+      description: Location of the Conference
+      JSONPath: .spec.location
+    - name: YEAR
+      type: string
+      description: The Year of the Conference
+      JSONPath: .spec.year
     - name: STATUS
       type: string
-      description: The Status of the App
+      description: The Status of the Conference
       JSONPath: .spec.status
     - name: URL
       type: string
-      description: The URL of the App
+      description: The URL of the Conference
       JSONPath: .spec.url    

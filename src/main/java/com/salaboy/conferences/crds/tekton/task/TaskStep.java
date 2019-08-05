@@ -12,7 +12,7 @@ import java.util.List;
         using = JsonDeserializer.None.class
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Step {
+public class TaskStep {
     private List<String> args;
     private List<String> command;
     private List<EnvVar> env;

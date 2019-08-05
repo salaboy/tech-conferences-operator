@@ -2,22 +2,21 @@
   "apiVersion": "tekton.dev/v1alpha1",
   "kind": "TaskRun",
   "metadata": {
-    "creationTimestamp": "2019-07-27T09:13:15Z",
+    "creationTimestamp": "2019-07-29T16:35:15Z",
     "generation": 1,
     "labels": {
       "branch": "master",
-      "build": "7",
-      "context": "release",
+      "build": "3",
       "created-by-prow": "true",
       "jenkins.io/task-stage-name": "from-build-pack",
       "owner": "salaboy",
-      "prowJobName": "bd7ea502-b04e-11e9-bf25-622a3e26e6c0",
-      "repo": "tech-conferences-operator",
-      "tekton.dev/pipeline": "salaboy-tech-conferences-operat-ljgml-7",
-      "tekton.dev/pipelineRun": "salaboy-tech-conferences-operat-ljgml-7",
-      "tekton.dev/task": "salaboy-tech-conferences-operat-ljgml-from-build-pack-7"
+      "prowJobName": "d0d7fd3e-b21e-11e9-94cd-784f43552794",
+      "repo": "conference-sponsors",
+      "tekton.dev/pipeline": "salaboy-conference-sponsors-mas-6c4ml-3",
+      "tekton.dev/pipelineRun": "salaboy-conference-sponsors-mas-6c4ml-3",
+      "tekton.dev/task": "salaboy-conference-sponsors-mas-6c4ml-from-build-pack-3"
     },
-    "name": "salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8",
+    "name": "salaboy-conference-sponsors-mas-6c4ml-3-from-build-pack-gj6m6",
     "namespace": "jx",
     "ownerReferences": [
       {
@@ -25,31 +24,31 @@
         "blockOwnerDeletion": true,
         "controller": true,
         "kind": "PipelineRun",
-        "name": "salaboy-tech-conferences-operat-ljgml-7",
-        "uid": "c3c86ff9-b04e-11e9-b4af-42010aa400c9"
+        "name": "salaboy-conference-sponsors-mas-6c4ml-3",
+        "uid": "d81fe551-b21e-11e9-b4af-42010aa400c9"
       }
     ],
-    "resourceVersion": "3397087",
-    "selfLink": "/apis/tekton.dev/v1alpha1/namespaces/jx/taskruns/salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8",
-    "uid": "c43aabad-b04e-11e9-b4af-42010aa400c9"
+    "resourceVersion": "4131973",
+    "selfLink": "/apis/tekton.dev/v1alpha1/namespaces/jx/taskruns/salaboy-conference-sponsors-mas-6c4ml-3-from-build-pack-gj6m6",
+    "uid": "d825b7b1-b21e-11e9-b4af-42010aa400c9"
   },
   "spec": {
     "inputs": {
       "params": [
         {
           "name": "version",
-          "value": "0.0.7"
+          "value": "0.0.3"
         },
         {
           "name": "build_id",
-          "value": "7"
+          "value": "3"
         }
       ],
       "resources": [
         {
           "name": "workspace",
           "resourceRef": {
-            "name": "salaboy-tech-conferences-operat-ljgml"
+            "name": "salaboy-conference-sponsors-mas-6c4ml"
           }
         }
       ]
@@ -58,130 +57,130 @@
     "serviceAccount": "tekton-bot",
     "taskRef": {
       "kind": "Task",
-      "name": "salaboy-tech-conferences-operat-ljgml-from-build-pack-7"
+      "name": "salaboy-conference-sponsors-mas-6c4ml-from-build-pack-3"
     },
     "timeout": "240h0m0s"
   },
   "status": {
-    "completionTime": "2019-07-27T09:15:20Z",
+    "completionTime": "2019-07-29T16:37:28Z",
     "conditions": [
       {
-        "lastTransitionTime": "2019-07-27T09:15:20Z",
+        "lastTransitionTime": "2019-07-29T16:37:28Z",
         "status": "True",
         "type": "Succeeded"
       }
     ],
-    "podName": "salaboy-tech-conferences-operat-ljgml-7-from-build-pack-pnjf8-pod-08434a",
-    "startTime": "2019-07-27T09:13:15Z",
+    "podName": "salaboy-conference-sponsors-mas-6c4ml-3-from-build-pack-gj6m6-pod-7d2a33",
+    "startTime": "2019-07-29T16:35:15Z",
     "steps": [
       {
         "name": "build-container-build",
         "terminated": {
-          "containerID": "docker://ff26b7f00278086395846ef9805d82622fad1a97f651fc54154f7b727944b94d",
+          "containerID": "docker://a2c1db4bf5c1f322c47cdf7cc211891c3d81173e0ac66c7b212192dc08d7c817",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:17Z",
+          "finishedAt": "2019-07-29T16:36:05Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:23Z"
+          "startedAt": "2019-07-29T16:35:21Z"
         }
       },
       {
         "name": "build-mvn-deploy",
         "terminated": {
-          "containerID": "docker://f154f2c2187d9d57559775b98f573918d2bfbcc94f1a543d1025b5e106108e7d",
+          "containerID": "docker://49ad2cba4123787ca2a54aa6b8834109726c9c1d467a8c7d6296cc1f0db47662",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:04Z",
+          "finishedAt": "2019-07-29T16:35:54Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:22Z"
+          "startedAt": "2019-07-29T16:35:21Z"
         }
       },
       {
         "name": "build-post-build",
         "terminated": {
-          "containerID": "docker://e97821b86562a97ea8ee430439aa1870d56543fd5b94a12cca712fb890b1c12c",
+          "containerID": "docker://cbe54a3aed191810cfd06a0f80c001481d412740983e7460f42b268102b5884c",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:17Z",
+          "finishedAt": "2019-07-29T16:36:06Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:23Z"
+          "startedAt": "2019-07-29T16:35:21Z"
         }
       },
       {
         "name": "build-skaffold-version",
         "terminated": {
-          "containerID": "docker://040b434b0e26cc4f385e0dee7f09fe09bc9c6b7085730f334dffb8cb9271125d",
+          "containerID": "docker://5cef370d622b2677b2588054037847530a9c474ebb01993bfb5f5e482f7b6945",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:05Z",
+          "finishedAt": "2019-07-29T16:35:55Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:22Z"
+          "startedAt": "2019-07-29T16:35:21Z"
         }
       },
       {
         "name": "git-merge",
         "terminated": {
-          "containerID": "docker://802a33898fbce57151b518e51ca997018c34f93d538b5957ace8ecbb5565181f",
+          "containerID": "docker://cecd960bb85fb42c193e683aed4e545a268425c2220be627bbbe021f02d4a452",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:13:23Z",
+          "finishedAt": "2019-07-29T16:35:22Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:22Z"
+          "startedAt": "2019-07-29T16:35:20Z"
         }
       },
       {
-        "name": "git-source-salaboy-tech-conferences-operat-ljgml-g6m",
+        "name": "git-source-salaboy-conference-sponsors-mas-6c4ml-pxr",
         "terminated": {
-          "containerID": "docker://5b8f246908321d786506865e126e152d109dde36cbda872d0ca4a4da25183d12",
+          "containerID": "docker://6f1644b9fff44433fe0859438e2a923b776f3cf82cc5f6738168aa9ac8f5a217",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:13:22Z",
+          "finishedAt": "2019-07-29T16:35:21Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:20Z"
+          "startedAt": "2019-07-29T16:35:19Z"
         }
       },
       {
         "name": "promote-changelog",
         "terminated": {
-          "containerID": "docker://6ad760972812b64a41ed3b5fa05edf0d753dce05c5597e65490006a07656117b",
+          "containerID": "docker://aca414f1d4b91f0462942ea4f4d70b60ce6fa4fcdfb33a678c5dc821a94bf93e",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:22Z",
+          "finishedAt": "2019-07-29T16:36:11Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:23Z"
+          "startedAt": "2019-07-29T16:35:22Z"
         }
       },
       {
         "name": "promote-helm-release",
         "terminated": {
-          "containerID": "docker://7bca9a82786d4112188a18126c74536524b110e63f404a4837dba575f575f669",
+          "containerID": "docker://3a6e1ce758686067c45276b0270c885dbf33ff05b41a4a2c8f0150eac7cac13b",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:14:26Z",
+          "finishedAt": "2019-07-29T16:36:14Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:23Z"
+          "startedAt": "2019-07-29T16:35:22Z"
         }
       },
       {
         "name": "promote-jx-promote",
         "terminated": {
-          "containerID": "docker://3fe9cb78bc2e7179279cb6361613a25f9e7e521b798035544a48a1f1d7f41e42",
+          "containerID": "docker://6d59641ee9cb020dabc55132c2393848789afa856a123820917a1c6134df8c2f",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:15:18Z",
+          "finishedAt": "2019-07-29T16:37:27Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:23Z"
+          "startedAt": "2019-07-29T16:35:22Z"
         }
       },
       {
         "name": "setup-jx-git-credentials",
         "terminated": {
-          "containerID": "docker://69ef4ee985685f3821d63527818cb823b729aabbfaf10e17459ab35d4db2e436",
+          "containerID": "docker://7d409ec843b9624c8c5bf45aa59a9a53d4911838152962192a076c779eee0875",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:13:24Z",
+          "finishedAt": "2019-07-29T16:35:23Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:22Z"
+          "startedAt": "2019-07-29T16:35:20Z"
         }
       },
       {
         "name": "nop",
         "terminated": {
-          "containerID": "docker://2b9c51f9b8fa687658c66f626fff855b95c8a4175f28093b966a0cd637e00c6e",
+          "containerID": "docker://038a833bc40b5d6d7387b9af9cf52873eac069a9e42c173b27d21e95c2f1125d",
           "exitCode": 0,
-          "finishedAt": "2019-07-27T09:15:18Z",
+          "finishedAt": "2019-07-29T16:37:27Z",
           "reason": "Completed",
-          "startedAt": "2019-07-27T09:13:24Z"
+          "startedAt": "2019-07-29T16:35:22Z"
         }
       }
     ]
