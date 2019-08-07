@@ -98,21 +98,6 @@ public class ConferencesOperator {
                     if (ConferenceCRDs.CONF_CRD_NAME.equals(name)) {
                         conferenceCRD = crd;
                     }
-//                    if (ConferenceCRDs.TEKTON_PIPELINE_CRD_NAME.equals(name)) {
-//                        pipelineCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.TEKTON_PIPELINERESOURCE_CRD_NAME.equals(name)) {
-//                        pipelineResourceCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.TEKTON_PIPELINERUN_CRD_NAME.equals(name)) {
-//                        pipelineRunCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.TEKTON_TASK_CRD_NAME.equals(name)) {
-//                        taskCRD = crd;
-//                    }
-//                    if (ConferenceCRDs.TEKTON_TASKRUN_CRD_NAME.equals(name)) {
-//                        taskRunCRD = crd;
-//                    }
                     if (ConferenceCRDs.JENKINSX_PIPELINEACTIVITY_CRD_NAME.equals(name)) {
                         pipelineActivityCRD = crd;
                     }
@@ -120,22 +105,12 @@ public class ConferencesOperator {
             }
             if (allCRDsFound()) {
                 logger.info("\t > Conference CRD: " + conferenceCRD.getMetadata().getName());
-//                logger.info("\t > Tekton Pipeline CRD: " + pipelineCRD.getMetadata().getName());
-//                logger.info("\t > Tekton PipelineResource CRD: " + pipelineResourceCRD.getMetadata().getName());
-//                logger.info("\t > Tekton PipelineRun CRD: " + pipelineRunCRD.getMetadata().getName());
-//                logger.info("\t > Tekton Task CRD: " + taskCRD.getMetadata().getName());
-//                logger.info("\t > Tekton TaskRun CRD: " + taskRunCRD.getMetadata().getName());
                 logger.info("\t > Jenkins X PipelineActivity CRD: " + pipelineActivityCRD.getMetadata().getName());
 
                 return true;
             } else {
                 logger.error("> Custom CRDs required to work not found please check your installation!");
                 logger.error("\t > Conference CRD: " + ((conferenceCRD == null) ? " NOT FOUND " : conferenceCRD.getMetadata().getName()));
-//                logger.error("\t > Tekton Pipeline CRD: " + ((pipelineCRD == null) ? " NOT FOUND " : pipelineCRD.getMetadata().getName()));
-//                logger.error("\t > Tekton PipelineResource CRD: " + ((pipelineResourceCRD == null) ? " NOT FOUND " : pipelineResourceCRD.getMetadata().getName()));
-//                logger.error("\t > Tekton PipelineRun CRD: " + ((pipelineRunCRD == null) ? " NOT FOUND " : pipelineRunCRD.getMetadata().getName()));
-//                logger.error("\t > Tekton Task CRD: " + ((taskCRD == null) ? " NOT FOUND " : taskCRD.getMetadata().getName()));
-//                logger.error("\t > Tekton TaskRun CRD: " + ((taskRunCRD == null) ? " NOT FOUND " : taskRunCRD.getMetadata().getName()));
                 logger.error("\t > Jenkins X PipelineActivity CRD: " + ((pipelineActivityCRD == null) ? " NOT FOUND " : pipelineActivityCRD.getMetadata().getName()));
 
                 return false;
@@ -157,11 +132,6 @@ public class ConferencesOperator {
         logger.info("> Conferences K8s Operator is Starting!");
         // Creating CRDs Clients
         conferenceCRDClient = k8SCoreRuntime.customResourcesClient(conferenceCRD, Conference.class, ConferenceList.class, DoneableConference.class).inNamespace(k8SCoreRuntime.getNamespace());
-//        pipelineCRDClient = k8SCoreRuntime.customResourcesClient(pipelineCRD, Pipeline.class, PipelineList.class, DoneablePipeline.class).inNamespace("jx");
-//        pipelineResourceCRDClient = k8SCoreRuntime.customResourcesClient(pipelineResourceCRD, PipelineResource.class, PipelineResourceList.class, DoneablePipelineResource.class).inNamespace("jx");
-//        pipelineRunCRDClient = k8SCoreRuntime.customResourcesClient(pipelineRunCRD, PipelineRun.class, PipelineRunList.class, DoneablePipelineRun.class).inNamespace("jx");
-//        taskCRDClient = k8SCoreRuntime.customResourcesClient(taskCRD, Task.class, TaskList.class, DoneableTask.class).inNamespace("jx");
-//        taskRunCRDClient = k8SCoreRuntime.customResourcesClient(taskRunCRD, TaskRun.class, TaskRunList.class, DoneableTaskRun.class).inNamespace("jx");
         pipelineActivityCRDClient = k8SCoreRuntime.customResourcesClient(pipelineActivityCRD, PipelineActivity.class, PipelineActivityList.class, DoneablePipelineActivity.class).inNamespace("jx");
 
         if (loadExistingResources() && watchOurCRDs()) {
@@ -177,8 +147,6 @@ public class ConferencesOperator {
      */
     private boolean allCRDsFound() {
         if (conferenceCRD == null && pipelineActivityCRD == null) {
-            // || pipelineCRD == null || pipelineResourceCRD == null
-            //|| pipelineRunCRD == null || taskCRD == null || taskRunCRD == null
 
             return false;
         }
@@ -194,24 +162,9 @@ public class ConferencesOperator {
         if (!conferenceWatchRegistered) {
             registerConferenceWatch();
         }
-//        if (!pipelineWatchRegistered) {
-//            registerPipelineWatch();
-//        }
-//        if (!pipelineResourceWatchRegistered) {
-//            registerPipelineResourceWatch();
-//        }
-//        if (!pipelineRunWatchRegistered) {
-//            registerPipelineRunWatch();
-//        }
         if (!pipelineActivityWatchRegistered) {
             registerPipelineActivityWatch();
         }
-//        if (!taskWatchRegistered) {
-//            registerTaskWatch();
-//        }
-//        if (!taskRunWatchRegistered) {
-//            registerTaskRunWatch();
-//        }
         if (conferenceWatchRegistered && pipelineActivityWatchRegistered) {
             //&& pipelineWatchRegistered && pipelineResourceWatchRegistered
             // && pipelineRunWatchRegistered && taskWatchRegistered && taskRunWatchRegistered) {
@@ -262,57 +215,7 @@ public class ConferencesOperator {
             conferenceService.getConferencePipeline(confName).forEach((key, value) -> logger.info("\t" + key + ":" + value));
         }
 
-//        List<Pipeline> pipelineList = pipelineCRDClient.list().getItems();
-//        if (!pipelineList.isEmpty()) {
-//            pipelinesResourceVersion = pipelineList.get(0).getMetadata().getResourceVersion();
-//            logger.info(">> Pipeline Resource Version: " + pipelinesResourceVersion);
-//            logger.info(">>>> Looking for pipelines: ");
-//            for (Pipeline p : pipelineList) {
-//                logger.info("> Pipeline: " + p);
-//            }
-//        }
-//
-//        List<PipelineResource> pipelineResourceList = pipelineResourceCRDClient.list().getItems();
-//        if (!pipelineResourceList.isEmpty()) {
-//            pipelineResourcesResourceVersion = pipelineResourceList.get(0).getMetadata().getResourceVersion();
-//            logger.info(">> Pipeline Resources Resource Version: " + pipelineResourcesResourceVersion);
-//            logger.info(">>>> Looking for pipelines resources: ");
-//            for (PipelineResource pr : pipelineResourceList) {
-//                logger.info("> PipelineResource: " + pr);
-//            }
-//        }
-//
-//        List<PipelineRun> pipelineRunList = pipelineRunCRDClient.list().getItems();
-//        if (!pipelineRunList.isEmpty()) {
-//            pipelineRunsResourceVersion = pipelineRunList.get(0).getMetadata().getResourceVersion();
-//            logger.info(">> PipelineRun Resource Version: " + pipelineRunsResourceVersion);
-//            logger.info(">>>> Looking for pipeline runs: ");
-//            for (PipelineRun pr : pipelineRunList) {
-//                logger.info("> PipelineRun: " + pr);
-//            }
-//        }
 
-
-//
-//        List<Task> taskList = taskCRDClient.list().getItems();
-//        if (!taskList.isEmpty()) {
-//            tasksResourceVersion = taskList.get(0).getMetadata().getResourceVersion();
-//            logger.info(">> Task Resource Version: " + tasksResourceVersion);
-//            logger.info(">>>> Looking for pipeline runs: ");
-//            for (Task t : taskList) {
-//                logger.info("> Task: " + t);
-//            }
-//        }
-//
-//        List<TaskRun> taskRunList = taskRunCRDClient.list().getItems();
-//        if (!taskRunList.isEmpty()) {
-//            taskRunsResourceVersion = taskRunList.get(0).getMetadata().getResourceVersion();
-//            logger.info(">> Task Run Resource Version: " + taskRunsResourceVersion);
-//            logger.info(">>>> Looking for pipeline runs: ");
-//            for (TaskRun tr : taskRunList) {
-//                logger.info("> TaskRun: " + tr);
-//            }
-//        }
 
 
         return true;
@@ -344,145 +247,6 @@ public class ConferencesOperator {
     }
 
 
-//    /*
-//     * Register a Task Resource Watch
-//     *  - This watch is in charge of adding and removing pipelines to/from the In memory desired state
-//     */
-//    private void registerTaskWatch() {
-//        logger.info("> Registering Task CRD Watch");
-//        taskCRDClient.withResourceVersion(tasksResourceVersion).watch(new Watcher<Task>() {
-//            @Override
-//            public void eventReceived(Watcher.Action action, Task task) {
-//                if (action.equals(Action.ADDED)) {
-//                    logger.info(">> Task Added: " + task.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.DELETED)) {
-//                    logger.info(">> Deleting Task: " + task.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.MODIFIED)) {
-//                    logger.debug(">> Modifying Task: " + task.getMetadata().getName());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onClose(KubernetesClientException cause) {
-//            }
-//        });
-//        taskWatchRegistered = true;
-//
-//    }
-//
-//    /*
-//     * Register a Task Resource Watch
-//     *  - This watch is in charge of adding and removing pipelines to/from the In memory desired state
-//     */
-//    private void registerTaskRunWatch() {
-//        logger.info("> Registering TaskRun CRD Watch");
-//        taskRunCRDClient.withResourceVersion(taskRunsResourceVersion).watch(new Watcher<TaskRun>() {
-//            @Override
-//            public void eventReceived(Watcher.Action action, TaskRun taskRun) {
-//                TaskRunStatus status = taskRun.getStatus();
-//                if (action.equals(Action.ADDED)) {
-//                    logger.info(">> TaskRun Added: " + taskRun);
-//
-//                    List<TaskRunStep> steps = status.getSteps();
-//                    if (steps != null) {
-//                        for (TaskRunStep s : steps) {
-//                            logger.info("\t > Task Run Step: " + s);
-//                        }
-//                    }
-//
-//                }
-//                if (action.equals(Action.DELETED)) {
-//                    logger.info(">> Deleting TaskRun: " + taskRun);
-//
-//                }
-//                if (action.equals(Action.MODIFIED)) {
-//                    logger.info(">> Modifying TaskRun: " + taskRun);
-//
-//                    List<TaskRunStep> steps = status.getSteps();
-//                    if (steps != null) {
-//                        for (TaskRunStep s : steps) {
-//                            logger.info("\t > Task Run Step: " + s);
-//                        }
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onClose(KubernetesClientException cause) {
-//            }
-//        });
-//        taskRunWatchRegistered = true;
-//
-//    }
-//
-//    /*
-//     * Register an Pipeline Resource Watch
-//     *  - This watch is in charge of adding and removing pipelines to/from the In memory desired state
-//     */
-//    private void registerPipelineWatch() {
-//        logger.info("> Registering Pipeline CRD Watch");
-//        pipelineCRDClient.withResourceVersion(pipelinesResourceVersion).watch(new Watcher<Pipeline>() {
-//            @Override
-//            public void eventReceived(Watcher.Action action, Pipeline pipeline) {
-//                if (action.equals(Action.ADDED)) {
-//                    logger.info(">> Pipeline Added: " + pipeline.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.DELETED)) {
-//                    logger.info(">> Deleting Pipeline: " + pipeline.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.MODIFIED)) {
-//                    logger.debug(">> Modifying Pipeline: " + pipeline.getMetadata().getName());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onClose(KubernetesClientException cause) {
-//            }
-//        });
-//        pipelineWatchRegistered = true;
-//
-//    }
-//
-//    /*
-//     * Register an PipelineResource Resource Watch
-//     *  - This watch is in charge of adding and removing pipelineResource to/from the In memory desired state
-//     */
-//    private void registerPipelineResourceWatch() {
-//        logger.info("> Registering Pipeline Resource CRD Watch");
-//        pipelineResourceCRDClient.withResourceVersion(pipelineResourcesResourceVersion).watch(new Watcher<PipelineResource>() {
-//            @Override
-//            public void eventReceived(Watcher.Action action, PipelineResource pipelineResource) {
-//                if (action.equals(Action.ADDED)) {
-//                    logger.info(">> PipelineResource Added: " + pipelineResource.getMetadata().getName());
-//                    // LOOK FOR THE CONFERENCE THAT HAS THE PIPELINE ASSOCIATED
-//                }
-//                if (action.equals(Action.DELETED)) {
-//                    logger.info(">> Deleting PipelineResource: " + pipelineResource.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.MODIFIED)) {
-//                    logger.debug(">> Modifying PipelineResource: " + pipelineResource.getMetadata().getName());
-//                    // DID THE STATUS CHANGED? We need to update the conference
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onClose(KubernetesClientException cause) {
-//            }
-//        });
-//        pipelineResourceWatchRegistered = true;
-//
-//    }
 
 
     /*
@@ -494,7 +258,6 @@ public class ConferencesOperator {
         pipelineActivityCRDClient.watch(new Watcher<PipelineActivity>() {
             @Override
             public void eventReceived(Watcher.Action action, PipelineActivity pipelineActivity) {
-                logger.info(">>> Pipeline Activity Event Recieved: " + action.toString());
                 String repository = pipelineActivity.getMetadata().getLabels().get("repository");
 
                 String pipeline = pipelineActivity.getSpec().getPipeline();
@@ -503,10 +266,9 @@ public class ConferencesOperator {
                 String status = pipelineActivity.getSpec().getStatus();
 
                 if (action.equals(Action.ADDED)) {
-                    logger.info(">> PipelineActivity Added: " + pipelineActivity.getMetadata().getName());
 
 
-                    logger.info(">>>>!!!!! Pipeline: " + pipeline + ",  for repo:  " + repository + ", in version:  " + version + ", with status: " + status);
+                    logger.info(">>>>!!!!!ADDED PipelineActivity: " + pipeline + ",  for repo:  " + repository + ", in version:  " + version + ", with status: " + status);
                     linkPipelineToConferenceModule(pipelineActivity);
 
 
@@ -516,8 +278,7 @@ public class ConferencesOperator {
 
                 }
                 if (action.equals(Action.MODIFIED)) {
-                    logger.info(">> Modifying PipelineActivity: " + pipelineActivity.getMetadata().getName());
-                    logger.info(">>>>!!!!! Pipeline: " + pipeline + ",  for repo:  " + repository + ", in version:  " + version + ", with status: " + status);
+                    logger.info(">>>>!!!!! Modified PipelineActivity: " + pipeline + ",  for repo:  " + repository + ", in version:  " + version + ", with status: " + status);
                     linkPipelineToConferenceModule(pipelineActivity);
                 }
 
@@ -532,36 +293,6 @@ public class ConferencesOperator {
 
     }
 
-//    /*
-//     * Register an PipelineRun Resource Watch
-//     *  - This watch is in charge of adding and removing pipelineRuns to/from the In memory desired state
-//     */
-//    private void registerPipelineRunWatch() {
-//        logger.info("> Registering Pipeline Run CRD Watch");
-//        pipelineRunCRDClient.withResourceVersion(pipelineRunsResourceVersion).watch(new Watcher<PipelineRun>() {
-//            @Override
-//            public void eventReceived(Watcher.Action action, PipelineRun pipelineRun) {
-//                if (action.equals(Action.ADDED)) {
-//                    logger.info(">> PipelineRun Added: " + pipelineRun.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.DELETED)) {
-//                    logger.info(">> Deleting PipelineRun: " + pipelineRun.getMetadata().getName());
-//
-//                }
-//                if (action.equals(Action.MODIFIED)) {
-//                    logger.debug(">> Modifying PipelineRun: " + pipelineRun.getMetadata().getName());
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onClose(KubernetesClientException cause) {
-//            }
-//        });
-//        pipelineRunWatchRegistered = true;
-//
-//    }
 
 
     /*
@@ -611,65 +342,7 @@ public class ConferencesOperator {
     }
 
 
-//    private void linkGatewayToApp(Application application) {
-//        String gatewayName = application.getSpec().getGateway();
-//        Gateway gateway = gatewaysCRDClient.withName(gatewayName).get();
-//        if (gateway != null) {
-//            if (gateway.getMetadata().getLabels().get("app") != null &&
-//                    gateway.getMetadata().getLabels().get("app").equals(application.getMetadata().getName())) {
-//                // This just set the Application as the Owner of the Gateway
-//                Gateway updatedGateway = conferenceService.owns(application, gateway);
-//                gatewaysCRDClient.createOrReplace(updatedGateway);
-//            } else {
-//                logger.info("This gateway (" + gateway + ") belongs to a different application"
-//                        + gateway.getMetadata().getLabels().get("app"));
-//            }
-//        } else {
-//            logger.error("Gateway: " + gatewayName + " doesn't exist!");
-//        }
-//    }
-//
-//    private void linkRegistryToApp(Application application) {
-//        String registryName = application.getSpec().getRegistry();
-//        Registry registry = registriesCRDClient.withName(registryName).get();
-//        if (registry != null) {
-//            if (registry.getMetadata().getLabels().get("app") != null &&
-//                    registry.getMetadata().getLabels().get("app").equals(application.getMetadata().getName())) {
-//                // This just set the Application as the Owner of the Registry
-//                Registry updatedRegistry = conferenceService.owns(application, registry);
-//                registriesCRDClient.createOrReplace(updatedRegistry);
-//            } else {
-//                logger.info("This registry (" + registry + ") belongs to a different application"
-//                        + registry.getMetadata().getLabels().get("app"));
-//            }
-//        } else {
-//            logger.error("Registry: " + registryName + " doesn't exist!");
-//        }
-//
-//    }
-//
-//    private void linkMicroServicesToApp(Application application) {
-//        Set<MicroServiceDescr> microservices = application.getSpec().getMicroservices();
-//        if (microservices != null && !microservices.isEmpty()) {
-//            for (MicroServiceDescr msd : microservices) {
-//                MicroService microService = microServicesCRDClient.withName(msd.getName()).get();
-//                if (microService != null) {
-//                    if (microService.getMetadata().getLabels().get("app") != null &&
-//                            microService.getMetadata().getLabels().get("app").equals(application.getMetadata().getName())) {
-//                        // This just set the Application as the Owner of the MicroService
-//                        MicroService updatedMicroService = conferenceService.owns(application, microService);
-//                        microServicesCRDClient.createOrReplace(updatedMicroService);
-//                    } else {
-//                        logger.debug("This microservice (" + microService + ") belongs to a different application"
-//                                + microService.getMetadata().getLabels().get("app"));
-//                    }
-//                } else {
-//                    logger.error("MicroService: " + msd.getName() + " doesn't exist!");
-//                }
-//
-//            }
-//        }
-//    }
+
 
 
     /*
@@ -685,54 +358,32 @@ public class ConferencesOperator {
         {
             Conference conference = conferenceService.getConference(confName);
             logger.info("> Conference Found: " + confName + ". Scanning ...");
-            // Is App Structure ok
-            if (areConferencePipelinesOK(conference)) {
 
-//                        // Is the APP Healthy??
-//                        boolean confHealthy = false;
-////                        if (config.isK8sServiceCheckEnabled()) {
-////                            confHealthy = conferenceService.isConferenceHealthy(conference, true);
-////                        } else {
-//                        // If we have K8s services disabled and the structure is ok we will set it as healthy
-//                        confHealthy = true;
-////                        }
-//                        if (confHealthy) {
-                // YES: Change the state and provide a URL
-//                            conference.getSpec().getMicroservices().forEach(m -> logger.info("\t> MicroService found: " + m));
-                if (conference.getSpec() == null) {
-                    conference.setSpec(new ConferenceSpec());
-                }
-                conference.getSpec().setStatus("HEALTHY");
+            if (conferenceService.areConferenceServicesHealthy(conference, true)) {
+
                 String url = conferenceService.exposeAndSetConferenceURL(conference, true);
                 conference.getSpec().setUrl(url);
-                logger.info("\t> Conference: " + confName + ", status:  HEALTHY, URL: " + url + " \n");
+                if(areConferencePipelinesOK(conference)) {
+                    conference.getSpec().setStatus("HEALTHY");
+                    logger.info("\t> Conference: " + confName + ", status:  HEALTHY, URL: " + url + " \n");
+                }else{
+                    conference.getSpec().setStatus("UNHEALTHY");
+                    logger.warn("\t > Conference Name: " + confName + " is not healthy  due failing pipelines");
+                    logger.info("\t> Conference: " + confName + ", status:  UNHEALTHY, URL: " + url + " \n");
+                }
 
             } else {
                 // NO: Change the state and remove the URL
                 logger.error("\t > Conference Name: " + confName + " is down due missing services");
-//                            if (conference.getSpec().getMicroservices() == null || conference.getSpec().getMicroservices().isEmpty()) {
-//                                logger.info("\t>App: " + appName + ": No MicroService found. ");
-//                            } else {
-//                                conference.getSpec().getMicroservices().forEach(m -> logger.info("\t> MicroService found: " + m));
-//                            }
-                if (conference.getSpec() == null) {
-                    conference.setSpec(new ConferenceSpec());
-                }
-                conference.getSpec().setStatus("UNHEALTHY");
+                conference.getSpec().setStatus("DOWN");
                 conferenceService.exposeAndSetConferenceURL(conference, false);
                 conference.getSpec().setUrl("N/A");
-                logger.info("\t> Conference: " + confName + ", status: UNHEALTHY. \n ");
+                logger.info("\t> Conference: " + confName + ", status: DOWN. \n ");
             }
-
-
 
             // Notify K8s about the updates required
             conferenceCRDClient.createOrReplace(conference);
-
-            //} //else {
-            // logger.error("The application " + conference.getMetadata().getName() + " structure is not complete please check the resources required by this application");
-            //    }
-            //}
+            
         });
 
     }

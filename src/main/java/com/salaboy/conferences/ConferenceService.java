@@ -28,6 +28,7 @@ public class ConferenceService {
     private Logger logger = LoggerFactory.getLogger(ConferenceService.class);
     private Map<String, Conference> conferences = new ConcurrentHashMap<>();
     private Map<String, Map<String, List<PipelineActivity>>> conferencePipelines = new ConcurrentHashMap<>();
+    private Map<String, Map<String, String>> conferenceServices = new ConcurrentHashMap<>();
     private Map<String, String> conferencesUrls = new HashMap<>();
 
     @Autowired
@@ -35,30 +36,25 @@ public class ConferenceService {
 
 
     /*
-     * Add the logic to define what are the rules for your application to be UP or DOWN
+     * Add the logic to define what are the rules for your conference to be UP or DOWN
      */
-    public boolean isConferenceHealthy(Conference conference, boolean log) {
-
-//        String gateway = conference.getSpec().getGateway();
-//        if (!k8SCoreRuntime.isServiceAvailable(gateway)) {
-//            logger.error("Service: " + gateway + " doesn't exist. ");
-//            return false;
-//        }
-//        String registry = conference.getSpec().getRegistry();
-//        if (!k8SCoreRuntime.isServiceAvailable(registry)) {
-//            logger.error("Service: " + registry + " doesn't exist. ");
-//            return false;
-//        }
-//        Set<MicroServiceDescr> microservices = conference.getSpec().getMicroservices();
-//        for (MicroServiceDescr microServiceDescr : microservices) {
-//            if (!k8SCoreRuntime.isServiceAvailable(microServiceDescr.getServiceName())) {
-//                logger.error("Service: " + microServiceDescr.getServiceName() + " doesn't exist. ");
-//                return false;
-//            }
-//        }
-
-
-        return true;
+    public boolean areConferenceServicesHealthy(Conference conference, boolean log) {
+        int serviceDown = 0;
+        if (conferenceServices.get(conference.getMetadata().getName()) == null) {
+            conferenceServices.put(conference.getMetadata().getName(), new HashMap<>());
+        }
+        for (ModuleRef mr : conference.getSpec().getModules()) {
+            if (k8SCoreRuntime.isServiceAvailable(mr.getName())) {
+                conferenceServices.get(conference.getMetadata().getName()).put(mr.getName(), "UP");
+            } else {
+                conferenceServices.get(conference.getMetadata().getName()).put(mr.getName(), "DOWN");
+                serviceDown++;
+            }
+        }
+        if (serviceDown == 0) {
+            return true;
+        }
+        return false;
     }
 
     public boolean checkMicroServicesAvailability(int size, boolean[] microServicesAvailable) {
@@ -82,7 +78,7 @@ public class ConferenceService {
 
         if (conference != null) {
             //Set OwnerReferences: the Application Owns the MicroService
-            List<OwnerReference> ownerReferencesFromApp = createOwnerReferencesFromApp(conference);
+            List<OwnerReference> ownerReferencesFromApp = createOwnerReferencesFromConference(conference);
             ObjectMeta objectMetaMicroService = service.getMetadata();
             objectMetaMicroService.setOwnerReferences(ownerReferencesFromApp);
             service.setMetadata(objectMetaMicroService);
@@ -97,7 +93,7 @@ public class ConferenceService {
     /*
      * Create owner references for modules of an application
      */
-    private List<OwnerReference> createOwnerReferencesFromApp(Conference conference) {
+    private List<OwnerReference> createOwnerReferencesFromConference(Conference conference) {
         if (conference.getMetadata().getUid() == null || conference.getMetadata().getUid().isEmpty()) {
             throw new IllegalStateException("The app needs to be saved first, the UUID needs to be present.");
         }
@@ -115,7 +111,7 @@ public class ConferenceService {
 
     public List<String> getConferences() {
         return conferences.values().stream()
-                .filter(app -> isConferenceHealthy(app, false))
+                .filter(app -> areConferenceServicesHealthy(app, false))
                 .map(a -> a.getMetadata().getName())
                 .collect(Collectors.toList());
     }
@@ -209,15 +205,28 @@ public class ConferenceService {
     }
 
 
+    public String getModuleServiceStatus(String confName, String module) {
+        if (conferenceServices.get(confName) != null && conferenceServices.get(confName).get(module) != null) {
+            return conferenceServices.get(confName).get(module);
+        }
+        return "";
+    }
+
     public String getPipelineActivityLastStatusForModule(String confName, String module) {
         List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
-        pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
-        return pipelineActivities.get(0).getSpec().getStatus();
+        if (pipelineActivities != null) {
+            pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+            return pipelineActivities.get(0).getSpec().getStatus();
+        }
+        return "";
     }
 
     public String getPipelineActivityLastVersionForModule(String confName, String module) {
         List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
-        pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
-        return pipelineActivities.get(0).getSpec().getVersion();
+        if (pipelineActivities != null) {
+            pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+            return pipelineActivities.get(0).getSpec().getVersion();
+        }
+        return "";
     }
 }

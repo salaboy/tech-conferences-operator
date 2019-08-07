@@ -1,11 +1,11 @@
 apiVersion: "alpha.k8s.salaboy.com/v1"
 kind: Conference
 metadata:
-  name: jenkins-world
+  name: jenkins-world-us
 spec:
   owner: "salaboy"
   location: "San Francisco, USA"
-  year: "2019"
+  year: "August 12-15, 2019"
   modules:
     - conference-sponsors
     - conference-agenda

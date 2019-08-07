@@ -1,0 +1,11 @@
+apiVersion: "alpha.k8s.salaboy.com/v1"
+kind: Conference
+metadata:
+  name: other-conference
+spec:
+  owner: "salaboy"
+  location: "Mars"
+  year: "Feb 30, 2020"
+  modules:
+    - conference-agenda
+    - other-conference-site
