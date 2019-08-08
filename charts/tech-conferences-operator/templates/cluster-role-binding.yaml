@@ -9,3 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: conferences-operator
+  namespace: jx-staging
