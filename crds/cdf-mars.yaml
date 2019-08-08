@@ -1,11 +1,11 @@
 apiVersion: "alpha.k8s.salaboy.com/v1"
 kind: Conference
 metadata:
-  name: other-conference
+  name: cdf-conference-mars
 spec:
   owner: "salaboy"
   location: "Mars"
   year: "Feb 30, 2020"
   modules:
     - conference-agenda
-    - other-conference-site
+    - cdf-conference-site
