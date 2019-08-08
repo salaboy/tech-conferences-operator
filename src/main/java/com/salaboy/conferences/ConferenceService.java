@@ -5,11 +5,6 @@ import com.salaboy.conferences.crds.conference.Conference;
 import com.salaboy.conferences.crds.conference.CustomService;
 import com.salaboy.conferences.crds.conference.ModuleRef;
 import com.salaboy.conferences.crds.jenkinsx.pipelineactivity.PipelineActivity;
-import com.salaboy.conferences.crds.tekton.pipeline.Pipeline;
-import com.salaboy.conferences.crds.tekton.pipelineresource.PipelineResource;
-import com.salaboy.conferences.crds.tekton.pipelinerun.PipelineRun;
-import com.salaboy.conferences.crds.tekton.task.Task;
-import com.salaboy.conferences.crds.tekton.taskrun.TaskRun;
 import com.salaboy.conferences.utils.ComparableVersion;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.OwnerReference;
@@ -52,18 +47,6 @@ public class ConferenceService {
             }
         }
         if (serviceDown == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean checkMicroServicesAvailability(int size, boolean[] microServicesAvailable) {
-        if (microServicesAvailable.length == size && microServicesAvailable.length > 0) {
-            for (boolean a : microServicesAvailable) {
-                if (!a) {
-                    return false;
-                }
-            }
             return true;
         }
         return false;
@@ -153,17 +136,9 @@ public class ConferenceService {
         return conferences;
     }
 
-    public Map<String, String> getConferencesUrls() {
-        return conferencesUrls;
-    }
 
     public void registerCustomResourcesForRuntime() {
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.CONF_CRD_GROUP_VERSION, "Conference", Conference.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Pipeline", Pipeline.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineResource", PipelineResource.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "PipelineRun", PipelineRun.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "Task", Task.class);
-        k8SCoreRuntime.registerCustomKind(ConferenceCRDs.TEKTON_CRD_GROUP_VERSION, "TaskRun", TaskRun.class);
         k8SCoreRuntime.registerCustomKind(ConferenceCRDs.JENKINSX_CRD_GROUP_VERSION, "PipelineActivity", PipelineActivity.class);
 
     }

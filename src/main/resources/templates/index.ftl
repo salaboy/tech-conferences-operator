@@ -81,24 +81,6 @@
                                 <#else>
                                     <p>No Modules.</p>
                                 </#list>
-<#--                                <li class="conference-item__module healthy">-->
-<#--                                    <div class="conference-item__module__flag"></div>-->
-<#--                                    <div class="conference-item__module__title">agenda</div>-->
-<#--                                    <ul>-->
-<#--                                        <li class="conference-item__module__item">Version: <span> 0.0.19</span></li>-->
-<#--                                        <li class="conference-item__module__item">Pipeline Status: <span>Succeeded</span></li>-->
-<#--                                        <li class="conference-item__module__item">Service Status: <span>OK</span></li>-->
-<#--                                    </ul>-->
-<#--                                </li>-->
-<#--                                <li class="conference-item__module healthy">-->
-<#--                                    <div class="conference-item__module__flag"></div>-->
-<#--                                    <div class="conference-item__module__title">site</div>-->
-<#--                                    <ul>-->
-<#--                                        <li class="conference-item__module__item">Version: <span> 0.0.6</span></li>-->
-<#--                                        <li class="conference-item__module__item">Pipeline Status: <span>Succeeded</span></li>-->
-<#--                                        <li class="conference-item__module__item">Service Status: <span>OK</span></li>-->
-<#--                                    </ul>-->
-<#--                                </li>-->
                             </ul>
                         </li>
                     </ul>
@@ -108,54 +90,6 @@
               <p>You don't have any conferences yet.</p>
           </#list>
         </#if>
-<#--        <li class="conference-item error">-->
-<#--            <h2 class="conference-item__title">-->
-<#--                <a href="http://conference-site.jx-staging.34.90.241.110.nip.io">-->
-<#--                    jenkins-world-->
-<#--                </a>-->
-<#--            </h2>-->
-<#--            <div class="flag"></div>-->
-<#--            <ul class="conference-item__info">-->
-<#--                <li class="conference-item__info__status"><span><img src="img/status-error.svg"></span>Status: ERROR</li>-->
-<#--                <li class="conference-item__info__location"><span><img src="img/location.svg"></span>Location: San Francisco, USA</li>-->
-
-<#--                <li>-->
-<#--                    <ul class="conference-item__modules">-->
-<#--                        <li class="conference-item__module healthy">-->
-<#--                            <div class="conference-item__module__flag"></div>-->
-<#--                            <div class="conference-item__module__title">sponsors</div>-->
-<#--                            <ul>-->
-<#--                                <li class="conference-item__module__item">Version: <span> 0.0.15</span></li>-->
-<#--                                <li class="conference-item__module__item">Pipeline Status: <span>Succeeded</span></li>-->
-<#--                                <li class="conference-item__module__item">Service Status: <span>OK</span></li>-->
-<#--                            </ul>-->
-<#--                        </li>-->
-<#--                        <li class="conference-item__module error">-->
-<#--                            <div class="conference-item__module__flag"></div>-->
-<#--                            <div class="conference-item__module__title">agenda</div>-->
-<#--                            <ul>-->
-<#--                                <li class="conference-item__module__item">Version: <span> 0.0.19</span></li>-->
-<#--                                <li class="conference-item__module__item">Pipeline Status: <span>Succeeded</span></li>-->
-<#--                                <li class="conference-item__module__item">Service Status: <span>OK</span></li>-->
-<#--                            </ul>-->
-<#--                        </li>-->
-<#--                        <li class="conference-item__module warning">-->
-<#--                            <div class="conference-item__module__flag"></div>-->
-<#--                            <div class="conference-item__module__title">site</div>-->
-<#--                            <ul>-->
-<#--                                <li class="conference-item__module__item">Version: <span> 0.0.6</span></li>-->
-<#--                                <li class="conference-item__module__item">Pipeline Status: <span>Succeeded</span></li>-->
-<#--                                <li class="conference-item__module__item">Service Status: <span>OK</span></li>-->
-<#--                            </ul>-->
-<#--                        </li>-->
-<#--                    </ul>-->
-<#--                </li>-->
-<#--            </ul>-->
-<#--        </li>-->
-
-
-
-
     </ul>
 </div>
 

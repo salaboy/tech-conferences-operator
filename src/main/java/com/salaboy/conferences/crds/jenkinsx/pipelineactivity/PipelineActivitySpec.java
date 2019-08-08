@@ -3,12 +3,9 @@ package com.salaboy.conferences.crds.jenkinsx.pipelineactivity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.salaboy.conferences.crds.tekton.Parameter;
 import io.fabric8.kubernetes.api.model.KubernetesResource;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @JsonDeserialize(
         using = JsonDeserializer.None.class

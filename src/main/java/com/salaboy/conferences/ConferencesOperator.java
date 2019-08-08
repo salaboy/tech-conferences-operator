@@ -38,33 +38,12 @@ public class ConferencesOperator {
     private CustomResourceDefinition pipelineActivityCRD = null;
     private CustomResourceDefinition taskCRD = null;
     private CustomResourceDefinition taskRunCRD = null;
-
     private boolean conferenceWatchRegistered = false;
     private boolean pipelineActivityWatchRegistered = false;
-//    private boolean pipelineWatchRegistered = false;
-//    private boolean pipelineResourceWatchRegistered = false;
-//    private boolean pipelineRunWatchRegistered = false;
-//    private boolean taskWatchRegistered = false;
-//    private boolean taskRunWatchRegistered = false;
-
-
     private String conferencesResourceVersion;
     private String pipelineActivitiesResourceVersion;
-//    private String pipelinesResourceVersion;
-//    private String pipelineResourcesResourceVersion;
-//    private String pipelineRunsResourceVersion;
-//
-//    private String tasksResourceVersion;
-//    private String taskRunsResourceVersion;
-
-
     private NonNamespaceOperation<Conference, ConferenceList, DoneableConference, Resource<Conference, DoneableConference>> conferenceCRDClient;
-    //    private NonNamespaceOperation<Pipeline, PipelineList, DoneablePipeline, Resource<Pipeline, DoneablePipeline>> pipelineCRDClient;
-//    private NonNamespaceOperation<PipelineResource, PipelineResourceList, DoneablePipelineResource, Resource<PipelineResource, DoneablePipelineResource>> pipelineResourceCRDClient;
     private NonNamespaceOperation<PipelineActivity, PipelineActivityList, DoneablePipelineActivity, Resource<PipelineActivity, DoneablePipelineActivity>> pipelineActivityCRDClient;
-//    private NonNamespaceOperation<PipelineRun, PipelineRunList, DoneablePipelineRun, Resource<PipelineRun, DoneablePipelineRun>> pipelineRunCRDClient;
-//    private NonNamespaceOperation<Task, TaskList, DoneableTask, Resource<Task, DoneableTask>> taskCRDClient;
-//    private NonNamespaceOperation<TaskRun, TaskRunList, DoneableTaskRun, Resource<TaskRun, DoneableTaskRun>> taskRunCRDClient;
 
 
     @Autowired
@@ -216,8 +195,6 @@ public class ConferencesOperator {
         }
 
 
-
-
         return true;
     }
 
@@ -245,8 +222,6 @@ public class ConferencesOperator {
         }
         return service;
     }
-
-
 
 
     /*
@@ -292,7 +267,6 @@ public class ConferencesOperator {
         pipelineActivityWatchRegistered = true;
 
     }
-
 
 
     /*
@@ -342,9 +316,6 @@ public class ConferencesOperator {
     }
 
 
-
-
-
     /*
      * Reconcile contains the logic that understand how services relates to applications and the application state
      *   matches the desired state with current state in K8s
@@ -363,10 +334,10 @@ public class ConferencesOperator {
 
                 String url = conferenceService.exposeAndSetConferenceURL(conference, true);
                 conference.getSpec().setUrl(url);
-                if(areConferencePipelinesOK(conference)) {
+                if (areConferencePipelinesOK(conference)) {
                     conference.getSpec().setStatus("HEALTHY");
                     logger.info("\t> Conference: " + confName + ", status:  HEALTHY, URL: " + url + " \n");
-                }else{
+                } else {
                     conference.getSpec().setStatus("UNHEALTHY");
                     logger.warn("\t > Conference Name: " + confName + " is not healthy  due failing pipelines");
                     logger.info("\t> Conference: " + confName + ", status:  UNHEALTHY, URL: " + url + " \n");
@@ -383,7 +354,7 @@ public class ConferencesOperator {
 
             // Notify K8s about the updates required
             conferenceCRDClient.createOrReplace(conference);
-            
+
         });
 
     }
@@ -425,14 +396,6 @@ public class ConferencesOperator {
         return false;
     }
 
-
-    /*
-     * Delete a Conference by name
-     */
-    public void deleteConference(String conferenceName) {
-        Conference conference = conferenceService.getConference(conferenceName);
-        conferenceCRDClient.delete(conference);
-    }
 
 
     public CustomResourceDefinition getConferenceCRD() {
