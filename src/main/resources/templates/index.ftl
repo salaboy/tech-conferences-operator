@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -45,13 +46,12 @@
                     </h2>
                     <div class="flag"></div>
                     <ul class="conference-item__info">
-
                         <#if confValue.getSpec().getStatus() == "UNHEALTHY">
-                          <li class="conference-item__info__status"><span><img src="img/status-warning.svg">
+                        <li class="conference-item__info__status"><span><img src="img/status-warning.svg">
                         <#elseif confValue.getSpec().getStatus() == "DOWN">
-                            <li class="conference-item__info__status"><span><img src="img/status-error.svg">
+                        <li class="conference-item__info__status"><span><img src="img/status-error.svg">
                         <#else>
-                            <li class="conference-item__info__status"><span><img src="img/status-healthy.svg">
+                        <li class="conference-item__info__status"><span><img src="img/status-healthy.svg">
                         </#if>
                                 </span>Status: ${confValue.getSpec().getStatus()}
                         </li>
@@ -71,9 +71,9 @@
                                         <li class="conference-item__module healthy">
                                     </#if>
                                         <div class="conference-item__module__flag"></div>
-                                        <div class="conference-item__module__title">${module.getName()}</div>
+                                        <div class="conference-item__module__title"></i> ${module.getName()} <a href="http://github.com/salaboy/${module.getName()}" target="_blank"><i class="fa fa-github"></i></a></div>
                                         <ul>
-                                            <li class="conference-item__module__item">Version: <span> ${(service.getPipelineActivityLastVersionForModule(confKey, module.getName()))!"N/A"}</span></li>
+                                            <li class="conference-item__module__item">Version: <span> ${(service.getPipelineActivityLastVersionForModule(confKey, module.getName()))!"N/A"}</span> <a href="http://github.com/salaboy/${module.getName()}/releases/tag/v${(service.getPipelineActivityLastVersionForModule(confKey, module.getName()))!"N/A"}" target="_blank"><i class="fa fa-github"></i></a></li>
                                             <li class="conference-item__module__item">Pipeline Status: <span>${(service.getPipelineActivityLastStatusForModule(confKey, module.getName()))!"N/A"}</span></li>
                                             <li class="conference-item__module__item">Service Status: <span>${(service.getModuleServiceStatus(confKey, module.getName()))!"N/A"}</span></li>
                                         </ul>
