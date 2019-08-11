@@ -104,7 +104,9 @@ public class ConferenceService {
     }
 
     public Conference removeConference(String conferenceName) {
+        conferencePipelines.remove(conferenceName);
         return conferences.remove(conferenceName);
+
     }
 
     public Conference getConference(String conferenceName) {

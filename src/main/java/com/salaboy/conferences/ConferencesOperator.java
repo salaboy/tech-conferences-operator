@@ -363,7 +363,8 @@ public class ConferencesOperator {
 
         List<ModuleRef> modules = conference.getSpec().getModules();
         Map<String, List<PipelineActivity>> conferencePipelines = conferenceService.getConferencePipeline(conference.getMetadata().getName());
-        if (conferencePipelines.keySet() == null || conferencePipelines.keySet().isEmpty()) {
+
+        if (conferencePipelines == null || conferencePipelines.keySet() == null || conferencePipelines.keySet().isEmpty()) {
             return false;
         }
         if (modules.size() == conferencePipelines.keySet().size()) {
