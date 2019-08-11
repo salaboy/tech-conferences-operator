@@ -26,7 +26,7 @@
 <![endif]-->
 
 <div class="dashboard-title">
-    <h1 class="main-title">Conferences Dashboard</h1>
+    <h1 class="main-title">Conferences Dashboard v${version}</h1>
 </div>
 <div class="dashboard-content">
     <ul class="conference-list">

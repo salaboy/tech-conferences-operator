@@ -3,6 +3,7 @@ package com.salaboy.conferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -49,11 +50,14 @@ class OperatorController {
     @Autowired
     private ConferenceService conferenceService;
 
+    @Value("${version:0}")
+    private String version;
 
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("conferences", conferenceService.getConferencesMap());
         model.addAttribute("service", conferenceService);
+        model.addAttribute("version", version);
 
         return "index";
     }

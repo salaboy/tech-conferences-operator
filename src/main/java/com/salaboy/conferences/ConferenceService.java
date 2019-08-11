@@ -190,19 +190,23 @@ public class ConferenceService {
     }
 
     public String getPipelineActivityLastStatusForModule(String confName, String module) {
-        List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
-        if (pipelineActivities != null) {
-            pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
-            return pipelineActivities.get(0).getSpec().getStatus();
+        if (conferencePipelines.get(confName) != null) {
+            List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
+            if (pipelineActivities != null) {
+                pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+                return pipelineActivities.get(0).getSpec().getStatus();
+            }
         }
         return "";
     }
 
     public String getPipelineActivityLastVersionForModule(String confName, String module) {
-        List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
-        if (pipelineActivities != null) {
-            pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
-            return pipelineActivities.get(0).getSpec().getVersion();
+        if (conferencePipelines.get(confName) != null) {
+            List<PipelineActivity> pipelineActivities = conferencePipelines.get(confName).get(module);
+            if (pipelineActivities != null) {
+                pipelineActivities.sort((o1, o2) -> new ComparableVersion(o2.getSpec().getVersion()).compareTo(new ComparableVersion(o1.getSpec().getVersion())));
+                return pipelineActivities.get(0).getSpec().getVersion();
+            }
         }
         return "";
     }
