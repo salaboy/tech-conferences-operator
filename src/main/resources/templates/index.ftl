@@ -26,7 +26,7 @@
 <![endif]-->
 
 <div class="dashboard-title">
-    <h1 class="main-title">Conferences Dashboard v${version} <a href="http://github.com/salaboy/tech-conference-operator/releases/tag/v${version}" target="_blank"><i class="fa fa-github"></i></a></h1>
+    <h1 class="main-title">Conferences Dashboard v${version} <a href="http://github.com/salaboy/tech-conferences-operator/releases/tag/v${version}" target="_blank"><i class="fa fa-github"></i></a></h1>
 </div>
 <div class="dashboard-content">
     <ul class="conference-list">
