@@ -186,7 +186,7 @@ public class ConferenceService {
         if (conferenceServices.get(confName) != null && conferenceServices.get(confName).get(module) != null) {
             return conferenceServices.get(confName).get(module);
         }
-        return "";
+        return "N/A";
     }
 
     public String getPipelineActivityLastStatusForModule(String confName, String module) {
@@ -197,7 +197,7 @@ public class ConferenceService {
                 return pipelineActivities.get(0).getSpec().getStatus();
             }
         }
-        return "";
+        return "N/A";
     }
 
     public String getPipelineActivityLastVersionForModule(String confName, String module) {
@@ -208,6 +208,6 @@ public class ConferenceService {
                 return pipelineActivities.get(0).getSpec().getVersion();
             }
         }
-        return "";
+        return "N/A";
     }
 }
