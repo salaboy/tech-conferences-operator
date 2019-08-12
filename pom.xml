@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.salaboy.conferences</groupId>
     <artifactId>tech-conferences-operator</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.25</version>
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
 
