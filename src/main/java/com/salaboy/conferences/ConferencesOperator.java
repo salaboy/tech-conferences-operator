@@ -250,6 +250,7 @@ public class ConferencesOperator {
                 }
                 if (action.equals(Action.DELETED)) {
                     logger.info(">> Deleting PipelineActivity: " + pipelineActivity.getMetadata().getName());
+                    //@TODO: unlink activity from conference module
 
                 }
                 if (action.equals(Action.MODIFIED)) {

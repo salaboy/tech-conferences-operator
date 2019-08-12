@@ -71,7 +71,7 @@
                                         <li class="conference-item__module healthy">
                                     </#if>
                                         <div class="conference-item__module__flag"></div>
-                                        <div class="conference-item__module__title"></i> ${module.getName()} <a href="http://github.com/salaboy/${module.getName()}" target="_blank"><i class="fa fa-github"></i></a></div>
+                                        <div class="conference-item__module__title"></i> ${module.getName()} <a href="http://ui.jx.34.83.214.92.nip.io/teams/jx/projects/salaboy/"${module.getName()}>???</a><a href="http://github.com/salaboy/${module.getName()}" target="_blank"><i class="fa fa-github"></i></a></div>
                                         <ul>
                                             <li class="conference-item__module__item">Version: <span> ${(service.getPipelineActivityLastVersionForModule(confKey, module.getName()))!"N/A"}</span> <a href="http://github.com/salaboy/${module.getName()}/releases/tag/v${(service.getPipelineActivityLastVersionForModule(confKey, module.getName()))!"N/A"}" target="_blank"><i class="fa fa-github"></i></a></li>
                                             <li class="conference-item__module__item">Pipeline Status: <span>${(service.getPipelineActivityLastStatusForModule(confKey, module.getName()))!"N/A"}</span></li>
